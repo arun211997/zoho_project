@@ -933,7 +933,8 @@ urlpatterns = [
     path('recurring_bill_details', views.recurring_bill_details, name='recurring_bill_details'),
     path('shareREC_billDetailsReportToEmail',views.shareREC_billDetailsReportToEmail, name='shareREC_billDetailsReportToEmail'),
     path('purchase_order_details',views.purchase_order_details,name='purchase_order_details'),
-
+    path('stock_inventary',views.stock_inventary,name='stock_inventary'),
+    
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)

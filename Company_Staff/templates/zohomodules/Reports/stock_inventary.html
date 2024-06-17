@@ -212,7 +212,7 @@
                                             class="fas fa-solid fa-gear"></i> Customize Report</button>
                                     <div id="contentDiv" class="content">
                                         <h6 style="color: white;">Customize Report</h6>
-                                        <form action="{% url 'purchase_ReportCustomized' %}"
+                                        <form action=""
                                             class="form reportCustomizeForm" method="get">
                                             <div class="px-2">
                                                 <label style="text-align:left ">From</label><br>
@@ -338,6 +338,8 @@
                         </div>
                     </div>
 
+
+
                     <!-- price lists table -->
                     <div class="table-responsive " style="overflow-x:auto;margin-top: 20px;">
                         <div class="card radius-15 print-only" id="pdf-card" style="background-color: #000;">
@@ -368,29 +370,20 @@
                                                                 id="reportTable">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th class="text-center">STATUS</th>
-                                                                        <th class="text-center">DATE</th>
-                                                                        <th class="text-center">DUE DATE</th>
-                                                                        <th class="text-center">PURCHASE ORDER NO.</th>
-                                                                        <th class="text-center">VENDOR NAME<i
-                                                                                class="fa-solid fa-caret-up arrow"
-                                                                                onclick="sortName(4)"></i></th>
-                                                                        <th class="text-center">TOTAL AMOUNT</th>
+                                                                        <th class="text-center">Item Name</th>
+                                                                        <th class="text-center">HSN/SAC</th>
+                                                                        <th class="text-center">Stock On Hand</th>
+                                                                        <th class="text-center">Inventary Asset Value</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    {% for p in purchase %}
+                                                                    {% for p in svalue %}
                                                                     <tr>
-                                                                        <td class="text-center">{{p.status}}</td>
-                                                                        <td class="text-center">
-                                                                            {{p.purchase_order_date}}</td>
-                                                                        <td class="text-center">{{p.expiration_date}}
+                                                                        <td class="text-center">{{p.item_name}}</td>
+                                                                        <td class="text-center">{{p.hsn_code}}</td>
+                                                                        <td class="text-center">{{p.opening_stock}}
                                                                         </td>
-                                                                        <td class="text-center">{{p.sales_order_number}}
-                                                                        </td>
-                                                                        <td class="text-center">
-                                                                            {{p.vendor_billing_address}}</td>
-                                                                        <td class="text-center">{{p.grand_total}}</td>
+                                                                        <td class="text-center">{{p.stvalue}}</td>
                                                                     </tr>
                                                                     {% endfor %}
                                                                 </tbody>

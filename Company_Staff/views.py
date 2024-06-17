@@ -1090,8 +1090,7 @@ def itemsoverview(request,pk):
                 latest_date = Item_Transaction_History.objects.filter(items_id=pk).aggregate(latest_date=Max('Date'))['latest_date']    
                 filtered_data = Item_Transaction_History.objects.filter(Date=latest_date, items_id=pk)
                 context = {
-                     'details': dash_details,
-                
+                    'details': dash_details,
                     'allmodules': allmodules,
                     'items':items,
                     'selitem':selitem,
@@ -42738,9 +42737,6 @@ def recurring_bill_details(request):
                     'total':total,
                     'status':st,
                     'balance':balance,
-                    
-                    
-                    
                 }
                 reportData.append(details)
                 totvendr=len(vendr)
@@ -42761,13 +42757,41 @@ def purchase_order_details(request):
         if log_details.user_type == 'Company':
             cmp = CompanyDetails.objects.get(login_details = log_details)
             dash_details = CompanyDetails.objects.get(login_details=log_details)
+           
         else:
             cmp = StaffDetails.objects.get(login_details = log_details).company
             dash_details = StaffDetails.objects.get(login_details=log_details)
+        
         allmodules = ZohoModules.objects.get(company_id = cmp,status = 'New')
         purchase = PurchaseOrder.objects.all()
         context = {'allmodules':allmodules, 'cmp':cmp , 'details':dash_details,'log_details':log_details,'purchase':purchase}
     return render(request,'zohomodules/Reports/purchase_order_details.html', context)
+
+def stock_inventary(request):
+    if 'login_id' in request.session:
+        log_id = request.session['login_id']
+        log_details= LoginDetails.objects.get(id=log_id)
+        stockValue = []
+        if log_details.user_type == 'Company':
+            cmp = CompanyDetails.objects.get(login_details = log_details)
+            dash_details = CompanyDetails.objects.get(login_details=log_details)
+           
+        else:
+            cmp = StaffDetails.objects.get(login_details = log_details).company
+            dash_details = StaffDetails.objects.get(login_details=log_details)
+        item=Items.objects.all()
+        for p in item:
+            details = {
+                 'item_name':p.item_name,
+                 'hsn_code':p.hsn_code,
+                 'opening_stock':p.opening_stock,
+                 'stvalue':p.opening_stock * p.purchase_price,
+            }
+            stockValue.append(details)
+
+        allmodules = ZohoModules.objects.get(company_id = cmp,status = 'New')
+        context = {'allmodules':allmodules, 'cmp':cmp , 'details':dash_details,'log_details':log_details,'items':item,'svalue':stockValue}
+    return render(request,'zohomodules/Reports/stock_inventary.html', context)
 
 # def recurring_bill_details(request):
 #     if 'login_id' in request.session:

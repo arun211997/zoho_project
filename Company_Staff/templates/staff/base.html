@@ -306,10 +306,10 @@
                 <hr>
                 {% endif %}
                 {% if allmodules.estimate == 1 %}
-                <a href="" class="d-flex align-items-center gap-2 dropdown-item">
+                <a href="{% url 'sales_estimate' %}" class="d-flex align-items-center gap-2 dropdown-item">
                   <div class="d-flex">
                     <p class="mb-0 fs-3">Estimate</p>
-                    <a href=""><i class="fa fa-plus text-white"></i></a>
+                    <a href="{% url 'sales_estimate_new' %}"><i class="fa fa-plus text-white"></i></a>
                   </div>
                 </a>
                 <hr>
@@ -406,11 +406,11 @@
                 <hr>
                 {% endif %}
                 {% if allmodules.bills == 1 %}
-                <a href="{% url 'bill_create' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                <a href="{% url 'bill_listout' %}" class="d-flex align-items-center gap-2 dropdown-item">
 
                   <div class="d-flex">
                     <p class="mb-0 fs-3">Bills</p>
-                    <a href="{% url 'bill_listout' %}"><i class="fa fa-plus text-white"></i></a>
+                    <a href="{% url 'bill_create' %}"><i class="fa fa-plus text-white"></i></a>
                   </div>
                 </a>
                 <hr>
@@ -438,6 +438,7 @@
                 {% endif %}
                 {% if allmodules.purchase_order == 1 %}
                 <a href="" class="d-flex align-items-center gap-2 dropdown-item">
+
                   <div class="d-flex">
                     <p class="mb-0 fs-3">Purchase Order</p>
                     <a href=""><i class="fa fa-plus text-white"></i></a>
@@ -446,11 +447,11 @@
                 <hr>
                 {% endif %}
                 {% if allmodules.expenses == 1 %}
-                <a href="" class="d-flex align-items-center gap-2 dropdown-item">
+                <a href="{% url 'expense' %}" class="d-flex align-items-center gap-2 dropdown-item">
 
                   <div class="d-flex">
                     <p class="mb-0 fs-3">Expenses</p>
-                    <a href=""><i class="fa fa-plus text-white"></i></a>
+                    <a href="{% url 'create_expense' %}"><i class="fa fa-plus text-white"></i></a>
                   </div>
                 </a>
                 <hr>
@@ -466,11 +467,11 @@
                 <hr>
                 {% endif %}
                 {% if allmodules.payment_made == 1 %}
-                <a href="" class="d-flex align-items-center gap-2 dropdown-item">
+                <a href="{%url 'payment_mades' %}" class="d-flex align-items-center gap-2 dropdown-item">
 
                   <div class="d-flex">
                     <p class="mb-0 fs-3">Payment Made</p>
-                    <a href=""><i class="fa fa-plus text-white"></i></a>
+                    <a href="{%url 'payment_made_add' %}"><i class="fa fa-plus text-white"></i></a>
                   </div>
                 </a>
                 <hr>
@@ -656,6 +657,112 @@
               </button>
               <div class="dropdown-container"
                 style="background-color: rgb(0, 0, 0);padding: 10px;justify-content: center;color: white;margin-left: 15%;">
+                {% if allmodules.reports == 1 %}
+                <button class="btn dropdown-btn d-flex"
+                  style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
+                  <span><label style="white-space: nowrap;"><a class="text-light"
+                        href="{% url 'e_way_bill_report' %}">E-way Bill Report</a></label></span>
+                  <i class="fa fa-caret-down " style="margin-left: 17px;"></i>
+                </button>
+                {% endif %}
+
+                <button class="btn dropdown-btn"
+                  style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
+                  <span><label>Business Overview Report</label></span>
+                  <i class="fa fa-caret-down" style="margin-left: 90%;"></i>
+                </button>
+                <div class="dropdown-container"
+                  style="background-color: rgb(0, 0, 0);padding: 20px;justify-content: center;color: white;">
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'dayBookReport' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Daybook</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'cashflowreport' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Cash Flow</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'all_transactions' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">All Transactions</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                </div>
+
+                <button class="btn dropdown-btn"
+                  style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
+                  <span><label>Business Status</label></span>
+                  <i class="fa fa-caret-down" style="margin-left: 90%;"></i>
+                </button>
+                <div class="dropdown-container"
+                  style="background-color: rgb(0, 0, 0);padding: 20px;justify-content: center;color: white;">
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'LoanReport' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Loan Statement</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'discountstatement' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Discount Statement</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                </div>
+
+                <button class="btn dropdown-btn"
+                  style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
+                  <span><label>Party Reports</label></span>
+                  <i class="fa fa-caret-down" style="margin-left: 90%;"></i>
+                </button>
+                <div class="dropdown-container"
+                  style="background-color: rgb(0, 0, 0);padding: 20px;justify-content: center;color: white;">
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'PartyReportByItem' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Party Report By Item</p>
+                    </div>
+                  </a>
+                  <hr>
+                  <a href="{% url 'sales_purchase_byparty' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Sale purchase by party</p>
+                    </div>
+                  </a>
+                  <hr>
+                  <a href="{% url 'party_statement' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Party Statement</p>
+                    </div>
+                  </a>
+                  <hr>
+                  <a href="{% url 'all_parties' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">All Parties</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                </div>
+
+
+
                 <button class="btn dropdown-btn"
                   style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
                   <span><label>Sales</label></span>
@@ -680,10 +787,70 @@
                   </a>
                   <hr>
                   {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'e_way_bill_report' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">E-way Bill Report</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
 
 
                 </div>
+                <button class="btn dropdown-btn"
+                  style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
+                  <span><label>Purchase</label></span>
+                  <i class="fa fa-caret-down" style="margin-left: 45%;"></i>
+                </button>
+                <div class="dropdown-container"
+                  style="background-color: rgb(0, 0, 0);padding: 20px;justify-content: center;color: white;">
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'purchase_by_vendor' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Purchase by Vendor</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
 
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'purchase_by_item' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Purchase by Item</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                </div>
+
+                <button class="btn dropdown-btn"
+                  style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
+                  <span><label>Expense Report</label></span>
+                  <i class="fa fa-caret-down" style="margin-left: 76%; margin-right: 55%;"></i>
+                </button>
+                <div class="dropdown-container"
+                  style="background-color: rgb(0, 0, 0);padding: 20px;justify-content: center;color: white;">
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'expenseRep' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Expense details</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'Recurring_expense_report' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Recurring expense detials</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
+
+                </div>
 
 
                 <button class="btn dropdown-btn"
@@ -700,18 +867,33 @@
                     </div>
                   </a>
                   <hr>
-                  {% endif %}
-
-                  {% if allmodules.reports == 1 %}
-                  <a href="{%url 'stock_inventary'%}" class="d-flex align-items-center gap-2 dropdown-item">
+                  <a href="{% url 'low_stock_summary' %}" class="d-flex align-items-center gap-2 dropdown-item">
                     <div class="d-flex">
-                      <p class="mb-0 fs-3">Inventary valuation Summary</p>
+                      <p class="mb-0 fs-3">Low Stock Summary</p>
                     </div>
                   </a>
                   <hr>
                   {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'sales_item_discount_details' %}"
+                    class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Sales Item Discount Details</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'item_report_by_party' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Item Report By Party</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
                 </div>
-              
+
 
 
                 <button class="btn dropdown-btn"
@@ -722,6 +904,45 @@
                         <i class="fa fa-caret-down" style="margin-left: 55%;"></i></label></span></a>
                 </button>
 
+                <button class="btn dropdown-btn"
+                  style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
+                  <span><label>GST Report</label></span>
+                  <i class="fa fa-caret-down" style="margin-left: 28%;"></i>
+                </button>
+                <div class="dropdown-container"
+                  style="background-color: rgb(0, 0, 0);padding: 20px;justify-content: center;color: white;">
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'gstr_one' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">GSTR-1</p>
+                    </div>
+                  </a>
+                  <hr>
+
+                  {% endif %}
+
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'gstr_two' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">GSTR-2</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
+
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'sales_summary_hsn' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Sales Summary By HSN</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
+
+                </div>
+
 
                 <button class="btn dropdown-btn d-flex"
                   style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
@@ -730,6 +951,24 @@
                 </button>
                 <div class="dropdown-container"
                   style="background-color: rgb(0, 0, 0);padding: 20px;justify-content: center;color: white;">
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'aging_summary' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Aging Summary</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'aging_details' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Aging Details</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
                   {% if allmodules.reports == 1 %}
                   <a href="{% url 'creditnotedetails' %}" class="d-flex align-items-center gap-2 dropdown-item">
                     <div class="d-flex">
@@ -750,6 +989,16 @@
                   <hr>
                   {% endif %}
                   {% if allmodules.reports == 1 %}
+                  <a href="{% url 'sale_order_item_details' %}" class="d-flex align-items-center gap-2 dropdown-item">
+
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Sale order Item Details</p>
+                    </div>
+
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
                   <a href="{% url 'ReccuringBillReport' %}" class="d-flex align-items-center gap-2 dropdown-item">
 
                     <div class="d-flex">
@@ -759,6 +1008,20 @@
                   </a>
                   <hr>
                   {% endif %}
+
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'view_invoice_report' %}" class="d-flex align-items-center gap-2 dropdown-item">
+
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Invoice Details</p>
+                    </div>
+
+                  </a>
+                  <hr>
+                  {% endif %}
+
+
+
                   {% if allmodules.reports == 1 %}
                   <a href="{% url 'retainer_invoice_details' %}" class="d-flex align-items-center gap-2 dropdown-item">
 
@@ -766,6 +1029,55 @@
                       <p class="mb-0 fs-3">Retainer Invoice Details</p>
                     </div>
 
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
+
+                  <a href="{% url 'estimatedetails' %}" class="d-flex align-items-center gap-2 dropdown-item">
+
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Estimate Details</p>
+                    </div>
+                    {% endif %}
+
+                  </a>
+                  <hr>
+
+
+
+
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'customerBalances' %}" class="d-flex align-items-center gap-2 dropdown-item">
+
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Customer Balances</p>
+                    </div>
+
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'payment_received_summary' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Payments Received Summary</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'payment_received_details' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Payments Received Details</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'outstanding_receivables' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Outstanding Receivable</p>
+                    </div>
                   </a>
                   <hr>
                   {% endif %}
@@ -786,9 +1098,43 @@
                   <hr>
                   {% endif %}
                   {% if allmodules.reports == 1 %}
+                  <a href="{% url 'BilldetailsReport' %}" class="d-flex align-items-center gap-2 dropdown-item">
+
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Bill Details</p>
+                    </div>
+
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
                   <a href="{% url 'recurring_bill_details' %}" class="d-flex align-items-center gap-2 dropdown-item">
                     <div class="d-flex">
                       <p class="mb-0 fs-3">Recurring Bill Details</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'vendorBalances' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Vendor Balances</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'payment_made_summary' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Payments Made Summary</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'payment_made_details' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Payments Made Details</p>
                     </div>
                   </a>
                   <hr>
@@ -801,10 +1147,80 @@
                   </a>
                   <hr>
                   {% endif %}
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'outstanding_payables' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Outstanding Payables</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
                 </div>
 
-              </div>
+                <button class="btn dropdown-btn d-flex"
+                  style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
+                  <span><label style="white-space: nowrap;">Inventory Report</label></span>
+                  <i class="fa fa-caret-down " style="margin-left: 17px;"></i>
+                </button>
+                <div class="dropdown-container"
+                  style="background-color: rgb(0, 0, 0);padding: 20px;justify-content: center;color: white;">
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'Stock_details_report' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Stock Details</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                </div>
+
+
+
+
+
+
+                <button class="btn dropdown-btn d-flex"
+                  style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
+                  <span><label style="white-space: nowrap;">Employee Loan</label></span>
+                  <i class="fa fa-caret-down " style="margin-left: 27px;"></i>
+                </button>
+                <div class="dropdown-container"
+                  style="background-color: rgb(0, 0, 0);padding: 20px;justify-content: center;color: white;">
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'employee_loan_report_details' %}"
+                    class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Employee Loan Details</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+
+                </div>
+
+
+                <button class="btn dropdown-btn d-flex"
+                  style="margin-top: 10px; border: none;outline: none; color: black;width: 100%;text-align: left;color: white;">
+                  <span><label style="white-space: nowrap;">Business Status</label></span>
+                  <i class="fa fa-caret-down " style="margin-left: 17px;"></i>
+                </button>
+                <div class="dropdown-container"
+                  style="background-color: rgb(0, 0, 0);padding: 20px;justify-content: center;color: white;">
+                  {% if allmodules.reports == 1 %}
+                  <a href="{% url 'bank_statement_report' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                    <div class="d-flex">
+                      <p class="mb-0 fs-3">Bank Statement</p>
+                    </div>
+                  </a>
+                  <hr>
+                  {% endif %}
+                </div>
+
+
             </li>
+
+
           </ul>
 
         </nav>
