@@ -779,6 +779,7 @@ urlpatterns = [
     path('purchase_ReportCustomized', views.purchase_ReportCustomized, name='purchase_ReportCustomized'),
     path('Rec_invoice_report_email',views.Rec_invoice_report_email,name="Rec_invoice_report_email"),
     path('pur_invoice_report_email',views.pur_invoice_report_email,name="pur_invoice_report_email"),
+    path('stock_report_email',views.stock_report_email,name="stock_report_email"),
     # ----------------------E way Bills  ------------------------------- 
     path('eway_bills', views.eway_bills, name = 'eway_bills'),
     path('create_eway_bill', views.create_eway_bill, name = 'create_eway_bill'),

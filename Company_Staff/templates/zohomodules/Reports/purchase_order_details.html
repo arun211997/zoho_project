@@ -268,7 +268,7 @@
                                     const ws = XLSX.utils.table_to_sheet(Table);
                                     const wb = XLSX.utils.book_new();
                                     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-                                    XLSX.writeFile(wb, "purchase_order_details" + date + ".xlsx");
+                                    XLSX.writeFile(wb, "stock_inventory_valuation" + date + ".xlsx");
                                 }
                             </script>
 
@@ -290,7 +290,7 @@
                                     var opt =
                                     {
                                         margin: [0.5, 0.3, 0.3, 0.5],
-                                        filename: 'purchase_order_details' + date,
+                                        filename: 'stock_inventory_valuation' + date,
                                         image: { type: 'jpeg', quality: 0.98 },
                                         html2canvas: { scale: 2 },
                                         jsPDF: { unit: 'cm', format: 'letter', orientation: 'portrait' }

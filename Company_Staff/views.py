@@ -34597,6 +34597,53 @@ def pur_invoice_report_email(request):
             # messages.success(request, 'Report has been shared via email successfully..!')
             return redirect("purchase_order_details")
 
+def stock_report_email(request):
+    if 'login_id' in request.session:
+        if request.session.has_key('login_id'):
+             log_id = request.session['login_id']
+        else:
+            return redirect('/')
+    log_details= LoginDetails.objects.get(id=log_id)
+    print("log_details:",log_details)
+    
+    if log_details.user_type=="Company":
+        dash_details = CompanyDetails.objects.get(login_details=log_details)
+        print("dash_details:",dash_details)
+        stockValue = []
+        if request.method == 'POST':
+            emails_string = request.POST['email_ids']
+
+            # Split the string by commas and remove any leading or trailing whitespace
+            emails_list = [email.strip() for email in emails_string.split(',')]
+            email_message = request.POST['email_message']
+            # print(emails_list)
+            cust = Customer.objects.filter(company=dash_details)
+            item=Items.objects.all()
+            for p in item:
+                 details = {
+                 'item_name':p.item_name,
+                 'hsn_code':p.hsn_code,
+                 'opening_stock':p.opening_stock,
+                 'stvalue':p.opening_stock * p.purchase_price,
+                  }
+                 stockValue.append(details)
+            context = {'reportData': stockValue, 'dash':dash_details,}
+            template_path = 'zohomodules/Reports/stock_inventary_pdf.html'
+            template = get_template(template_path)
+
+            html  = template.render(context)
+            result = BytesIO()
+            pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+            pdf = result.getvalue()
+            filename = f'stock_inventary_valuation'
+            subject = f"stock_inventary_valuation"
+            email = EmailMsg(subject, f"Hi,\nPlease find the attached Report for - purchase order Details. \n{email_message}\n\n--\nRegards,\n{dash_details.company_name}\n{dash_details.address}\n{dash_details.state} - {dash_details.country}\n{dash_details.contact}", from_email=settings.EMAIL_HOST_USER, to=emails_list)
+            email.attach(filename, pdf, "application/pdf")
+            email.send(fail_silently=False)
+
+            # messages.success(request, 'Report has been shared via email successfully..!')
+            return redirect("stock_inventary")
+
 
 
 #=================================RECURRING IVOICE REPORT  END==========================================

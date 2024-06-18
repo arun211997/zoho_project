@@ -197,55 +197,18 @@
                     <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}"
                             class="text-warning">Dashboard</a></li>
                     {% endif %}
-                    <li class="breadcrumb-item" aria-current="page">Purchase Order Details</li>
+                    <li class="breadcrumb-item" aria-current="page">Stock Inventory Valuation</li>
                 </ol>
             </nav>
             <div>
                 <div class=" mt-lg-4 mt-2 rounded p-4" style="background-color: rgb(0, 0, 0);color: white;">
-                    <h1 class="text-light">Purchase Order Details</h1>
+                    <h1 class="text-light">Stock Inventory Valuation</h1>
                     <br>
                     <div class="row  ">
                         <div class="col-md-6 d-flex p-2 ">
                             <div class="col-md-6">
-                                <div class="position-relative">
-                                    <button class="btn btn-warning" onclick="toggleContent()"><i
-                                            class="fas fa-solid fa-gear"></i> Customize Report</button>
-                                    <div id="contentDiv" class="content">
-                                        <h6 style="color: white;">Customize Report</h6>
-                                        <form action=""
-                                            class="form reportCustomizeForm" method="get">
-                                            <div class="px-2">
-                                                <label style="text-align:left ">From</label><br>
-                                                <input class="inputdate form-control" type="date" name="start_date"
-                                                    id="startDate" value="" style="color:white;">
-                                            </div>
-                                            <div class="px-2">
-                                                <label style="text-align:left ">To</label><br>
-                                                <input type="date" class="inputdate form-control" name="end_date"
-                                                    id="endDate" value="" style="color:white;">
-                                            </div>
-
-                                            <div class="px-2">
-                                                <label style="text-align:left;color: white;">Status</label><br>
-                                                <select name="status" id="salesStatus" class="form-control">
-                                                    <option name="category">SELECT</option>
-                                                    <option name="category">DRAFT</option>
-                                                    <option name="category">SAVE</option>
-                                                    <option name="category">RECURRING BILL</option>
-                                                    <option name="category">BILL</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="d-flex px-2 mt-3 mb-4">
-                                                <button type="submit" id="reportrun"
-                                                    class="btn btn-outline-light w-50">Run
-                                                    Report</button>
-                                                <button type="reset" onclick="toggleContent()"
-                                                    class="btn btn-outline-light ml-1 w-50">Cancel</button>
-                                            </div>
-
-                                        </form>
-                                    </div>
+                                <div class="col">
+                                    <input type="text" id="searchInput" class="form-control text-black" style="border-color: rgb(198, 134, 16);background-color: rgb(255, 255, 255);" placeholder="Search...">
                                 </div>
                             </div>
                         </div>
@@ -268,7 +231,7 @@
                                     const ws = XLSX.utils.table_to_sheet(Table);
                                     const wb = XLSX.utils.book_new();
                                     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-                                    XLSX.writeFile(wb, "purchase_order_details" + date + ".xlsx");
+                                    XLSX.writeFile(wb, "stock_inventory_valuation" + date + ".xlsx");
                                 }
                             </script>
 
@@ -290,7 +253,7 @@
                                     var opt =
                                     {
                                         margin: [0.5, 0.3, 0.3, 0.5],
-                                        filename: 'purchase_order_details' + date,
+                                        filename: 'stock_inventory_valuation' + date,
                                         image: { type: 'jpeg', quality: 0.98 },
                                         html2canvas: { scale: 2 },
                                         jsPDF: { unit: 'cm', format: 'letter', orientation: 'portrait' }
@@ -354,7 +317,7 @@
                                                     <div class="col-12">
                                                         <center class="h5 text-white"><b>{{details.company_name}}</b>
                                                         </center>
-                                                        <center class="h3 text-white"><b>Purchase Order Details</b>
+                                                        <center class="h3 text-white"><b>Stock Inventory Valuation</b>
                                                         </center>
                                                         {% if sdate and edate %}
                                                         <center class="h6 text-white"><b>{{sdate}} TO
@@ -373,7 +336,8 @@
                                                                         <th class="text-center">Item Name</th>
                                                                         <th class="text-center">HSN/SAC</th>
                                                                         <th class="text-center">Stock On Hand</th>
-                                                                        <th class="text-center">Inventary Asset Value</th>
+                                                                        <th class="text-center">Inventary Asset Value
+                                                                        </th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -413,7 +377,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body mx-3" style="background-color: #000;">
-                                    <form action="{% url 'pur_invoice_report_email' %}" method="post"
+                                    <form action="{% url 'stock_report_email' %}" method="post"
                                         id="share_to_email_form" class="needs-validation" novalidate
                                         enctype="multipart/form-data">
                                         {%csrf_token%}
@@ -425,11 +389,11 @@
                                         </div>
 
                                         <div class="form-group">
-                                           
+
                                             <input type="date" style="display: none;" name="estart" value={{sdate}}>
-                                            <input type="date" style="display: none;"  name="eend" value={{edate}}>
-                                            <input type="text" style="display: none;"  name="status" value={{status}}>
-                                           
+                                            <input type="date" style="display: none;" name="eend" value={{edate}}>
+                                            <input type="text" style="display: none;" name="status" value={{status}}>
+
                                         </div>
 
                                         <div class="form-group mt-2">
@@ -600,22 +564,36 @@
                                 contentDiv.style.display = "none";
                             } else {
                                 contentDiv.style.display = "block";
-                                // Position the div just below the button
-                                // var buttonRect = event.target.getBoundingClientRect();
-                                // contentDiv.style.top = (buttonRect.bottom + window.scrollY) + "px";
-                                // contentDiv.style.left = buttonRect.left + "px";
+                               
                             }
                         }
 
                     </script>
-                    <script>
 
+                    <script>
+                        $(document).ready(function () {
+                            $('#searchInput').on('keyup', function () {
+                                var searchText = $(this).val().toLowerCase();
+                                $('#reportTable tbody tr').each(function () {
+                                    var itemData = $(this).text().toLowerCase();
+                                    if (itemData.indexOf(searchText) === -1) {
+                                        $(this).hide();
+                                    } else {
+                                        $(this).show();
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+
+                    <script>
                         document.getElementById('reportrun').addEventListener('click', function () {
                             var sdate = document.getElementById("salesStatus").value;
                             document.getElementById("estart").value = sdate;
 
                         })
                     </script>
+
                     <script>
                         $(document).ready(function () {
                             var stat = `{{status}}`;
