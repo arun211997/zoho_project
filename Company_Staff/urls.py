@@ -658,6 +658,7 @@ urlpatterns = [
     path('get_all_items_data',views.get_all_items_data,name='get_all_items_data'),
     #Retainer invoce
     path('retainer_list',views.retainer_list,name='retainer_list'),
+    path('project_list',views.project_list,name='project_list'),
     path('new_retainer',views.new_retainer,name='new_retainer'),
     path('get_customer_details/', views.get_customer_details, name='get_customer_details'),
     path('itemdata_ri', views.itemdata_ri, name='itemdata_ri'),
