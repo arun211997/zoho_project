@@ -28395,6 +28395,115 @@ def new_retainer(request):
         return render(request, 'zohomodules/retainer_invoice/new_retainer.html', context)
     else:
         return redirect('/')
+    
+def new_project(request):
+    if 'login_id' in request.session:
+        login_id = request.session['login_id']
+        if 'login_id' not in request.session:
+            return redirect('/')
+        log_details = LoginDetails.objects.get(id=login_id)
+        # Add this print statement to check the log_details
+        print("Login Details:", log_details)
+        if log_details.user_type == 'Staff':
+            staff_id = request.session['login_id']
+            try:
+                staff = StaffDetails.objects.get(login_details=log_details)
+                company = staff.company
+                dash_details = staff
+                customers = Customer.objects.filter(company=company)
+                last_record = RetainerInvoice.objects.filter(user=request.user.id).order_by('-id').first()  # Use .first() to get a single instance
+            except StaffDetails.DoesNotExist:
+                return redirect('/')
+        elif log_details.user_type == 'Company':
+            company_id = request.session['login_id']
+            try:
+                company = CompanyDetails.objects.get(login_details=log_details)
+                dash_details = company
+                customers = Customer.objects.filter(company=company)
+                last_record = RetainerInvoice.objects.filter(company=dash_details).order_by('-id').first()  # Use .first() to get a single instance
+            except CompanyDetails.DoesNotExist:
+                return redirect('/')
+        else:
+            return redirect('/')
+
+        item = Items.objects.filter(company=company)
+        allmodules = ZohoModules.objects.get(company=company, status='New')
+        units = Unit.objects.filter(company=company)
+        accounts = Chart_of_Accounts.objects.filter(company=company)
+        
+        payment_terms = Company_Payment_Term.objects.filter(company=company)
+        print("Payment Terms:", payment_terms)  # Debugging statement
+        # Get the last recorded RetainerInvoice based on logindetails
+        # last_record = RetainerInvoice.objects.filter(logindetails=log_details).order_by('-id').first()
+        print("last record:",last_record)
+        # Initialize next retainer invoice number
+        next_ret_number = ''
+        
+        lastSalesNo = ''
+        last_digit_index = 0  # Initialize last_digit_index here
+        if last_record ==None:
+            reference = '01'
+            remaining_characters=''
+            
+        else:
+            lastSalesNo = last_record.retainer_invoice_number
+            last_two_numbers = int(lastSalesNo[-2:])+1
+            for i in range(len(lastSalesNo)-1,-1,-1):
+                if not lastSalesNo[i].isdigit():
+                    last_digit_index=i+1
+                    break
+            prefix=lastSalesNo[:last_digit_index]
+            number=int(lastSalesNo[last_digit_index:])
+            number+=1
+            enumber=str(number).zfill(3)
+            next_ret_number=f"{prefix}{enumber}"
+            print(next_ret_number)
+            # print("lastSalesNo:", lastSalesNo)  # Print lastSalesNo to the terminal
+            last_two_numbers = int(lastSalesNo[-2:])+1
+            # print(last_two_numbers)
+            remaining_characters = lastSalesNo[:-2]  
+            if remaining_characters == '':
+                if last_two_numbers < 10:
+                    reference = '0'+str(last_two_numbers)
+                else:
+                    reference = str(last_two_numbers)
+            else:
+                if last_two_numbers < 10:
+                    reference = remaining_characters+'0'+str(last_two_numbers)
+                else:
+                    reference = remaining_characters+str(last_two_numbers)
+        # Get the last reference from retInvoiceReference
+        last_reference = retInvoiceReference.objects.filter(company=company).last()
+        if last_reference is None:
+            reford = '01'
+        else:
+            # Increment the reference number for the next RetainerInvoice
+            next_reference = last_reference.reference + 1
+            reford = f"{next_reference:02}"
+        
+        banks = Banking.objects.filter(company=company).values_list('bnk_name', flat=True)
+        subtotal = request.POST.get('subtotal')  # Update this with the correct POST data key
+        adjustment = request.POST.get('adjustment')  # Update this with the correct POST data key
+        total = request.POST.get('total')  # Update this with the correct POST data key
+        paid = request.POST.get('paid')  # Update this with the correct POST data key
+        balance = request.POST.get('balance')  # Update 
+        context = {
+            'details': dash_details,
+            'units': units,
+            'allmodules': allmodules,
+            'accounts': accounts,
+            'customer1': customers,
+            'reford': reford,
+            'next_ret_number': next_ret_number,
+            'item': item,
+            'banks': banks,
+            'pTerms': payment_terms,  # Add payment terms data to the context
+            
+        }
+        
+        return render(request,'zohomodules/Time_Tracking/new_project.html', context)
+    else:
+        return redirect('/')
 
 def get_customer_details(request):
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':

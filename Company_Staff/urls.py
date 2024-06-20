@@ -660,6 +660,7 @@ urlpatterns = [
     path('retainer_list',views.retainer_list,name='retainer_list'),
     path('project_list',views.project_list,name='project_list'),
     path('new_retainer',views.new_retainer,name='new_retainer'),
+    path('new_project',views.new_project,name='new_project'),
     path('get_customer_details/', views.get_customer_details, name='get_customer_details'),
     path('itemdata_ri', views.itemdata_ri, name='itemdata_ri'),
     path('get_bank_details/', views.get_bank_details, name='get_bank_details'),
