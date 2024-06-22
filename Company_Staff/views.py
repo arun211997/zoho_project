@@ -28777,7 +28777,7 @@ def get_bank_details(request):
         data = {'bnk_acno': bank.bnk_acno}
         return JsonResponse(data)
 
-
+        
 def create_invoice_draft(request):
     if 'login_id' in request.session:
         if request.session.has_key('login_id'):
