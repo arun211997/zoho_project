@@ -30,7 +30,7 @@ from django.urls import reverse
 from django.shortcuts import render,redirect,get_object_or_404
 from . models import *
 from decimal import Decimal
-from Company_Staff.models import Vendor, Vendor_comments_table, Vendor_doc_upload_table, Vendor_mail_table,Vendor_remarks_table,VendorContactPerson,VendorHistory
+from Company_Staff.models import Vendor, Vendor_comments_table, Vendor_doc_upload_table, Vendor_mail_table,Vendor_remarks_table,VendorContactPerson,VendorHistory,project
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from email.message import EmailMessage
@@ -43396,3 +43396,34 @@ def shareREC_billDetailsReportToEmail(request):
             print(e)
             messages.error(request, f'{e}')
             return redirect(recurring_bill_details)
+        
+def create_project(request):
+    if 'login_id' in request.session:
+        log_id = request.session['login_id']
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type == 'Company':
+            com = CompanyDetails.objects.get(login_details = log_details)
+        else:
+            com = StaffDetails.objects.get(login_details = log_details).company
+        if request.method=="POST":
+            projects=project()
+            pname=request.POST["projectname"]
+            pcode = request.POST["project_code"]
+            address = request.POST["address"]
+            date = request.POST["date"]
+            end = request.POST["enddate"]
+            tdetails = request.POST["task"] 
+            tname = request.POST["tname"] 
+            description = request.POST["description"]
+            billable =  request.POST["billable"]
+            custname= request.POST["cselect"]
+            print("customerid"+custname)
+            employee = request.POST["eselect"]
+            print("employeeid"+employee)
+            company_id=com.id
+            print(company_id)
+            login_details =log_details.id
+            print(login_details)
+            return redirect("new_project")
+
+

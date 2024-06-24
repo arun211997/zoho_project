@@ -2193,4 +2193,23 @@ class purchaseorder_doc_upload_table(models.Model):
     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, blank=True, null=True)
     title=models.TextField(max_length=200)
     document=models.FileField(upload_to='doc/')    
+
+class project(models.Model):
+    project_name = models.CharField(max_length=255)
+    project_code = models.CharField(max_length=255)
+    customer = models.ForeignKey(Customer,on_delete=models.CASCADE,null=True)
+    email = models.CharField(max_length=255)
+    billiing = models.CharField(max_length=255)
+    billiing_method = models.CharField(max_length=255)
+    date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    employee = employee=models.ForeignKey(payroll_employee,on_delete=models.CASCADE,null=True)
+    employee_mail = models.CharField(max_length=255)
+    task_details = models.CharField(max_length=255)
+    task_name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    billable = models.CharField(max_length=255)
+    company=models.ForeignKey(CompanyDetails,on_delete=models.CASCADE, null=True)
+    login_details=models.ForeignKey(LoginDetails,on_delete=models.CASCADE, null=True)
+
 #End
