@@ -19408,14 +19408,14 @@ def createRecurringInvoice(request):
             itemId = request.POST.getlist("item_id[]")
             itemName = request.POST.getlist("item_name[]")
             hsn  = request.POST.getlist("hsn[]")
-            qty = request.POST.getlist("qty[]")
+            # qty = request.POST.getlist("qty[]")
             price = request.POST.getlist("priceListPrice[]") if 'priceList' in request.POST else request.POST.getlist("price[]")
             tax = request.POST.getlist("taxGST[]") if request.POST['place_of_supply'] == com.state else request.POST.getlist("taxIGST[]")
             discount = request.POST.getlist("discount[]")
             total = request.POST.getlist("total[]")
 
-            if len(itemId)==len(itemName)==len(hsn)==len(qty)==len(price)==len(tax)==len(discount)==len(total) and itemId and itemName and hsn and qty and price and tax and discount and total:
-                mapped = zip(itemId,itemName,hsn,qty,price,tax,discount,total)
+            if len(itemId)==len(itemName)==len(hsn)==len(price)==len(tax)==len(discount)==len(total) and itemId and itemName and hsn and qty and price and tax and discount and total:
+                mapped = zip(itemId,itemName,hsn,price,tax,discount,total)
                 mapped = list(mapped)
                 for ele in mapped:
                     itm = Items.objects.get(id = int(ele[0]))
@@ -20175,6 +20175,36 @@ def viewRecurringInvoice(request, id):
             'cmp':cmp,'allmodules':allmodules, 'details':dash_details, 'invoice':invoice, 'invItems': invItems, 'allInvoices':recInv, 'comments':cmts, 'history':hist, 'last_history':last_history, 'created':created,
         }
         return render(request, 'zohomodules/recurring_invoice/view_recurring_invoice.html', context)
+    else:
+        return redirect('/')
+
+def viewProject(request, id):
+    if 'login_id' in request.session:
+        log_id = request.session['login_id']
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type == 'Company':
+            cmp = CompanyDetails.objects.get(login_details = log_details)
+            dash_details = CompanyDetails.objects.get(login_details=log_details)
+        else:
+            cmp = StaffDetails.objects.get(login_details = log_details).company
+            dash_details = StaffDetails.objects.get(login_details=log_details)
+            
+      
+        allmodules= ZohoModules.objects.get(company = cmp)
+
+        prod = project.objects.get(id = id)
+        invoice = RecurringInvoice.objects.get(id = id)
+        invItems = Reccurring_Invoice_item.objects.filter(reccuring_invoice = invoice)
+        recInv = RecurringInvoice.objects.filter(company = cmp)
+        cmts = Recurring_Invoice_Comments.objects.filter(recurring_invoice = invoice)
+        hist = RecurringInvoiceHistory.objects.filter(recurring_invoice = invoice)
+        last_history = RecurringInvoiceHistory.objects.filter(recurring_invoice = invoice).last()
+        created = RecurringInvoiceHistory.objects.get(recurring_invoice = invoice, action = 'Created')
+        context = {
+                'cmp':cmp,'allmodules':allmodules, 'details':dash_details, 'invoice':invoice, 'invItems': invItems, 'allInvoices':recInv, 'comments':cmts, 'history':hist, 'last_history':last_history, 'created':created,
+                'project':prod,
+            }
+        return render(request, 'zohomodules/Time_Tracking/view_project.html', context)
     else:
         return redirect('/')
 
@@ -28455,22 +28485,21 @@ def project_list(request):
         log_details = LoginDetails.objects.get(id=login_id)
         if log_details.user_type == 'Staff':
             dash_details = StaffDetails.objects.get(login_details=log_details)
-            item = Items.objects.filter(company=dash_details.company)
             allmodules = ZohoModules.objects.get(company=dash_details.company, status='New')
-            invoices = RetainerInvoice.objects.filter(logindetails=log_details).order_by(F('retainer_invoice_date').asc())
+            projectd= project.objects.all()
+            
         elif log_details.user_type == 'Company':
             dash_details = CompanyDetails.objects.get(login_details=log_details)
-            item = Items.objects.filter(company=dash_details)
             allmodules = ZohoModules.objects.get(company=dash_details, status='New')
-            invoices = RetainerInvoice.objects.filter(company=dash_details).order_by(F('retainer_invoice_date').asc())
+            projectd= project.objects.all()
+           
         else:
             return redirect('/')
         # Prepare the context to pass to the template
         context = {
             'details': dash_details,
-            'item': item,
             'allmodules': allmodules,
-            'invoices': invoices,
+            'project': projectd,
         }
         
         # Render the template with the context data
@@ -29092,6 +29121,80 @@ def retaineroverview(request, pk=None):
             # Accessing customer attributes
             customer_name = invoice.customer_name.customer_display_name  # Assuming customerName is the attribute for customer name
             
+            customer_email = invoice.customer_name.customer_email
+            gst_treatment = invoice.customer_name.GST_treatement
+            gst_number = invoice.customer_name.GST_number
+            place_of_supply = invoice.customer_name.place_of_supply
+            billing_address = invoice.customer_name.billing_address  # Fetch billing address
+            retainer_id = invoice.id  # Assuming the ID of the RetainerInvoice object is stored in the 'id' attribute
+            # Print the retainer object here
+            print(invoice)
+            history_entries = RetainerInvoice.objects.filter(id=pk).order_by('modified_at') 
+            # invoices = RetainerInvoice.objects.select_related('customer_name').all()
+            # Fetch modified by and created by login details objects
+            # Fetch modified by and created by login details objects
+            modified_by_details = None
+            created_by_details = None
+            for entry in history_entries:
+                if entry.modified_by:
+                    modified_by_details = entry.modified_by
+                if entry.created_by:
+                    created_by_details = entry.created_by
+            
+            retainer_invoice = RetainerInvoice.objects.get(pk=retainer_id)
+            subtotal = Retaineritems.objects.filter(retainer=retainer_invoice).aggregate(total=Sum('amount'))['total']
+            context = {
+                'details': dash_details,
+                'invoice': invoice,
+                'history_entries': history_entries,
+                'units': units,
+                'allmodules': allmodules,
+                'accounts': accounts,
+                'customer_name': customer_name,
+                'customer_email': customer_email,
+                'gst_treatment': gst_treatment,
+                'gst_number': gst_number,
+                'place_of_supply': place_of_supply,
+                'items': items,
+                'billing_address': billing_address,  # Pass billing address to the context
+                'ret_payments': payment_details,
+                'retainer_id': retainer_id,  # Pass the retainer_id to the context
+                'created_by_details': created_by_details,
+                'modified_by_details': modified_by_details,
+                'comments': comments,
+                'invoices': invoices,
+                'status': status,  # Pass the status to the template
+                'invoicess': retainer_invoice,
+                'subtotal': subtotal if subtotal else 0,
+                'adjustment': retainer_invoice.adjustment,
+                'total': retainer_invoice.total_amount,
+                'paid': retainer_invoice.paid,
+                'balance': retainer_invoice.balance,
+            }
+            return render(request, 'zohomodules/retainer_invoice/retaineroverview.html', context)
+        
+        return render(request, 'zohomodules/retainer_invoice/retaineroverview.html')
+    
+    except ObjectDoesNotExist:
+        return HttpResponse("The requested item does not exist.")
+
+def projectoverview(request, pk=None):
+    try:
+        if 'login_id' in request.session:
+            login_id = request.session.get('login_id')
+            if not login_id:
+                return redirect('/')
+            
+            log_details = LoginDetails.objects.get(id=login_id)
+           
+            if log_details.user_type == 'Staff':
+                dash_details = StaffDetails.objects.get(login_details=log_details)
+                allmodules = ZohoModules.objects.get(company=dash_details.company,status='New')
+            elif log_details.user_type == 'Company':
+                dash_details = CompanyDetails.objects.get(login_details=log_details)
+                allmodules = ZohoModules.objects.get(company=dash_details,status='New')
+            # Accessing customer attributes
+            customer_name = invoice.customer_name.customer_display_name  # Assuming customerName is the attribute for customer name
             customer_email = invoice.customer_name.customer_email
             gst_treatment = invoice.customer_name.GST_treatement
             gst_number = invoice.customer_name.GST_number
@@ -43410,6 +43513,7 @@ def create_project(request):
             pname=request.POST["projectname"]
             pcode = request.POST["project_code"]
             address = request.POST["address"]
+            billmethod = request.POST["billmethod"]
             date = request.POST["date"]
             end = request.POST["enddate"]
             tdetails = request.POST["task"] 
@@ -43417,13 +43521,17 @@ def create_project(request):
             description = request.POST["description"]
             billable =  request.POST["billable"]
             custname= request.POST["cselect"]
-            print("customerid"+custname)
+            custid=Customer.objects.get(id=custname)
             employee = request.POST["eselect"]
-            print("employeeid"+employee)
+            empid=payroll_employee.objects.get(id=employee)
             company_id=com.id
-            print(company_id)
             login_details =log_details.id
-            print(login_details)
+            data = project(project_name=pname, project_code = pcode, email=custid.customer_email, billiing=address,
+                           billable=billable,date=date,end_date=end,employee_mail=empid.email,
+                           task_details=tdetails,task_name=tname,description=description, billiing_method=bill_method,
+                           customer_id=custname,employee_id=employee,company_id=com.id,login_details_id=login_details
+                            )
+            data.save()
             return redirect("new_project")
 
 

@@ -477,6 +477,8 @@ urlpatterns = [
     path('Company/get_all_accnts',views.getAllAccountsAjax, name='getAllAccountsAjax'),
     path('Company/edit_recurring_invoice/<int:id>',views.editRecurringInvoice, name='editRecurringInvoice'),
     path('Company/view_recurring_invoice/<int:id>',views.viewRecurringInvoice, name='viewRecurringInvoice'),
+    path('Company/view_recurring_invoice/<int:id>',views.viewRecurringInvoice, name='viewRecurringInvoice'),
+   
     path('Compnay/update_recurring_invoice/<int:id>',views.updateRecurringInvoice, name='updateRecurringInvoice'),
     path('Company/convert_recurring_invoice/<int:id>',views.convertRecurringInvoice, name='convertRecurringInvoice'),
     path('Company/add_recurring_invoice_comments/<int:id>',views.addRecurringInvoiceComment, name = 'addRecurringInvoiceComment'),
@@ -526,6 +528,7 @@ urlpatterns = [
     path('ConvertInvoice/<int:id>',views.ConvertInvoice,name='ConvertInvoice'),
     path('convert_recurringinvoice_page/<int:id>',views.convert_recurringinvoice_page,name='convert_recurringinvoice_page'),
     path('ConvertRecurringInvoice/<int:id>',views.ConvertRecurringInvoice,name='ConvertRecurringInvoice'),
+    path('viewProject/<int:id>',views.viewProject, name='viewProject'),
     #---------------- Zoho Final sales order - Ginto Shaji - End--------------------
     # --------------------------------------   ashikhvu   (start)   -----------------------------------------------
     path('recurring_bill_listout',views.recurring_bill_listout,name='recurring_bill_listout'),
