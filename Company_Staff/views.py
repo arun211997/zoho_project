@@ -20195,13 +20195,13 @@ def viewProject(request, id):
         prod = project.objects.get(id = id)
         invoice = RecurringInvoice.objects.get(id = id)
         invItems = Reccurring_Invoice_item.objects.filter(reccuring_invoice = invoice)
-        recInv = RecurringInvoice.objects.filter(company = cmp)
+        allproject = project.objects.filter(company = cmp)
         cmts = Recurring_Invoice_Comments.objects.filter(recurring_invoice = invoice)
         hist = RecurringInvoiceHistory.objects.filter(recurring_invoice = invoice)
         last_history = RecurringInvoiceHistory.objects.filter(recurring_invoice = invoice).last()
         created = RecurringInvoiceHistory.objects.get(recurring_invoice = invoice, action = 'Created')
         context = {
-                'cmp':cmp,'allmodules':allmodules, 'details':dash_details, 'invoice':invoice, 'invItems': invItems, 'allInvoices':recInv, 'comments':cmts, 'history':hist, 'last_history':last_history, 'created':created,
+                'cmp':cmp,'allmodules':allmodules, 'details':dash_details, 'invoice':invoice, 'invItems': invItems, 'allproject':allproject, 'comments':cmts, 'history':hist, 'last_history':last_history, 'created':created,
                 'project':prod,
             }
         return render(request, 'zohomodules/Time_Tracking/view_project.html', context)
