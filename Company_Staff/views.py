@@ -20150,6 +20150,30 @@ def editRecurringInvoice(request, id):
     else:
         return redirect('/')
 
+def edit_Project(request, id):
+    if 'login_id' in request.session:
+        log_id = request.session['login_id']
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type == 'Company':
+            cmp = CompanyDetails.objects.get(login_details = log_details)
+            dash_details = CompanyDetails.objects.get(login_details=log_details)
+        else:
+            cmp = StaffDetails.objects.get(login_details = log_details).company
+            dash_details = StaffDetails.objects.get(login_details=log_details)
+
+        allmodules= ZohoModules.objects.get(company = cmp)
+        cust = Customer.objects.filter(company = cmp, customer_status = 'Active')
+        projectd = project.objects.get(id = id)
+        employee = payroll_employee.objects.filter(company = cmp)
+
+        context = {
+            'cmp':cmp,'allmodules':allmodules, 'details':dash_details, 'customers': cust,
+            'p':projectd,'emp':employee
+        }
+        return render(request, 'zohomodules/Time_Tracking/edit_project.html', context)
+    else:
+        return redirect('/')
+
 def viewRecurringInvoice(request, id):
     if 'login_id' in request.session:
         log_id = request.session['login_id']

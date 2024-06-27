@@ -696,7 +696,7 @@
                         <p style="color: chocolate;">{{m}}</p>
                         {% endfor %}
 
-                        <form action="{%url 'edit_project'%}" id="home" method="post" enctype="multipart/form-data"
+                        <form action="" id="home" method="post" enctype="multipart/form-data"
                             style="padding-left: 20px;">
                             {% csrf_token%}
                             <br>
@@ -714,7 +714,7 @@
                                 <div class="col-md-6">
                                     <input type="text" id="projectname" name="projectname" class="form-control "
                                         style="background-color: black; color: white;border-radius: 5px;"
-                                        value="{{p.projectname}}">
+                                        value="{{p.project_name}}">
                                 </div>
                                 <input type="text" style="width: 30%;display: none;background-color: #f44336;"
                                     id="customer_id">
@@ -739,7 +739,7 @@
                                 <div class="col-md-6 d-flex">
                                     <div class="p-0 border-0 bg-none position-relative drop-box">
                                         <input required type="text" id="customer"
-                                            value="{{ invoice.customer.title }} {{ invoice.customer.first_name }} {{ invoice.customer.last_name }}"
+                                            value="{{ p.customer.title }} {{ p.customer.first_name }} {{ p.customer.last_name }}"
                                             name="customer"
                                             class="dropdown-toggle form-control text-white customers-display"
                                             onkeyup="filterCustomers()" data-bs-toggle="dropdown" aria-expanded="false"
@@ -748,11 +748,11 @@
                                             id="cust_drop"
                                             style="overflow-y: auto; height: fit-content;max-height: 40vh; border: 1px solid gray;">
                                             <li class="dropdown-item customers-options text-white"
-                                                onclick="getCustomerDetails('','')">Select Customer</li>
+                                                >Select Customer</li>
                                             {% for cust in customers %}
                                             <li class="dropdown-item customers-options text-white"
-                                                onclick="getCustomerDetails(`{{cust.id}}`,this.innerHTML)">{{ cust.title
-                                                }} {{ cust.first_name }} {{ cust.last_name }}</li>
+                                                onclick="getCustomerDetails(`{{cust.id}}`,this.innerHTML)">
+                                              {{ cust.customer_display_name }}</li>
                                             {% endfor %}
                                         </ul>
                                     </div>
@@ -799,7 +799,7 @@
                                             <select class="form-control bg-black text-white" id="entryType"
                                                 name="entry_type">
                                                 <option value="">Select</option>
-                                                {% if p.billiing_method== 'Based on Project Hours' %}
+                                                {% if p.billiing_method == 'Based on Project Hours' %}
                                                 <option value="Based on Project Hours" selected>Based on Project Hours</option>
                                                 <option value="Fixed Cost for Project">Fixed Cost for Project</option>
                                                 {% elif p.billiing_method == 'Fixed Cost for Project' %}
@@ -809,17 +809,6 @@
                                                 <option value="Invoice">Invoice</option>
                                                 <option value="Bill of Supply">Bill of Supply</option>
                                                 {% endif %}
-                                            </select>
-                                            <select class="form-control my-select" id="pay_method" name="billmethod"
-                                                required style="background-color: black; color: white;">
-                                                <option value="cash">Select</option>
-                                                <option value="cash">Based on Project Hours</option>
-                                                <option value="cheque">Fixed Cost for
-                                                    Project</option>
-                                                <!-- <option value="upi">UPI</option>
-                                                {% for bank in banks %}
-                                                <option value="{{ bank }}">{{ bank }}</option>
-                                                {% endfor %} -->
                                             </select>
                                         </div>
                                     </div>
@@ -841,24 +830,14 @@
                                 <div class="form-group row" style="font-size: medium;">
                                     <label class="col-md-3">End Date</label>
                                     <div class="col-md-6">
+                                        
                                         <input type="date" class="form-control" name="enddate" id="dateField" required
                                             pattern="\d{4}-\d{2}-\d{2}" style="background-color: black; color: white;"
                                             value="{{p.end_date}}">
                                     </div>
                                 </div>
-                            </b><br>
-
-                            <!-- <div class="form-group row" id="cgstno_row">
-                                <div class="col-md-3"><b><label for="" style="font-size: medium;">Serial
-                                            Number</label></b>
-                                </div>
-                                <div class="col-md-6"><input type="text" id="serial" name="serial"
-                                        class="form-control text-light" value="">
-                                </div>
-                            </div><br> -->
-
-
-
+                            </b>
+                            <br>
 
                             <div class="row">
 
@@ -866,14 +845,25 @@
                                     <b><label class="" style="font-size: medium; ">Employee </label></b>
                                 </div>
                                 <div class="col-md-6 d-flex">
-                                    <select class="form-control form-select" id="employee_sel" name="eselect"
-                                        onchange="getEmployeeDetails(this.value)" required
-                                        style="background-color: black; color: white;border-radius: 5px;">
-                                        <option hidden disabled selected value="">Select Employee</option>
-                                        {% for p in employee %}
-                                        <option value="{{ p.id }}">{{ p.first_name }}</option>
-                                        {% endfor %}
-                                    </select>
+                                    <div class="p-0 border-0 bg-none position-relative drop-box">
+                                        <input required type="text" id="customer"
+                                            value="{{ p.employee.title }} {{ p.employee.first_name }} {{ p.employee.last_name }}"
+                                            name="customer"
+                                            class="dropdown-toggle form-control text-white customers-display"
+                                            onkeyup="filterCustomers()" data-bs-toggle="dropdown" aria-expanded="false"
+                                            placeholder="Select Customer.." autocomplete="off">
+                                        <ul class="dropdown-menu w-100 customers-available position-absolute bg-black text-white"
+                                            id="cust_drop"
+                                            style="overflow-y: auto; height: fit-content;max-height: 40vh; border: 1px solid gray;">
+                                            <li class="dropdown-item customers-options text-white"
+                                                >Select Employee</li>
+                                            {% for e in emp %}
+                                            <li class="dropdown-item customers-options text-white"
+                                                onclick="getEmployeeDetails(`{{e.id}}`,this.innerHTML)">
+                                              {{ e.first_name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
 
                                     <button type="button" data-toggle="modal" data-target="#newEmployee"
                                         class="btn btn-outline-warning py-2 ms-1">+</button>
@@ -890,7 +880,7 @@
                                         style="background-color: black; color: white;border-radius: 5px;" readonly>
                                 </div>
                                 <input type="text" style="width: 30%;display: none;" id="customer_id" name="customer_id"
-                                    readonly>
+                                  value="{{p.employee.employee_email}}"  readonly>
                             </div>
                             <br>
 
@@ -899,7 +889,7 @@
                                             Task Details</label></b>
                                 </div>
                                 <div class="col-md-6"><input type="text" id="serial" name="task"
-                                        class="form-control text-light" value="">
+                                        class="form-control text-light" value="{{p.task_details}}">
                                 </div>
                             </div><br>
 
@@ -908,18 +898,11 @@
                                             Task Name</label></b>
                                 </div>
                                 <div class="col-md-6"><input type="text" id="serial" name="tname"
-                                        class="form-control text-light" value="">
+                                        class="form-control text-light" value="{{p.task_name}}">
                                 </div>
                             </div><br>
 
-                            <div class="form-group row" id="cgstno_row">
-                                <div class="col-md-3"><b><label for="" style="font-size: medium;">
-                                            Description</label></b>
-                                </div>
-                                <div class="col-md-6"><input type="text" id="serial" name="description"
-                                        class="form-control text-light" value="">
-                                </div>
-                            </div><br>
+                           
 
                             <b>
                                 <div class="form-group row" style="font-size: medium;">
@@ -931,14 +914,14 @@
                                         <div class="d-flex">
                                             <select class="form-control my-select" id="pay_method" name="billable"
                                                 required style="background-color: black; color: white;">
-                                                <option value="cash">Select</option>
-                                                <option value="cash">Billable</option>
-                                                <option value="cheque">
-                                                    Non-Billable</option>
-                                                <!-- <option value="upi">UPI</option>
-                                                {% for bank in banks %}
-                                                <option value="{{ bank }}">{{ bank }}</option>
-                                                {% endfor %} -->
+                                                <option value="">Select</option>
+                                                {% if p.billable == 'Billable' %}
+                                                <option value="Billable" selected>Billable</option>
+                                                <option value="Non-Billable">Non-Billable</option>
+                                                {% elif p.billable == 'Non-Billable' %}
+                                                <option value="Billable" >Billable</option>
+                                                <option value="Non-Billable" selected>Non-Billable</option>
+                                                {% endif %}
                                             </select>
                                         </div>
                                     </div>
