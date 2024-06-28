@@ -20231,6 +20231,53 @@ def viewProject(request, id):
         return render(request, 'zohomodules/Time_Tracking/view_project.html', context)
     else:
         return redirect('/')
+    
+def updateProject(request, id):
+    if 'login_id' in request.session:
+        log_id = request.session['login_id']
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type == 'Company':
+            com = CompanyDetails.objects.get(login_details = log_details)
+        else:
+            com = StaffDetails.objects.get(login_details = log_details).company
+
+        pro = project.objects.get(id=id)
+        if request.method == 'POST':
+            pro.project_name=request.POST["projectname"]
+            pro.project_code=request.POST["project_code"]
+            pro.customer_id=request.POST["customerId"]
+            pro.billiing=request.POST["address"]
+            pro.billiing_method=request.POST["billingmethod"]
+            pro.date=request.POST["date"]
+            pro.end_date=request.POST["enddate"]
+            pro.employee_id=request.POST["employeeId"]
+            pro.task_name=request.POST["task"]
+            pro.task_details=request.POST["tname"]
+            pro.billable=request.POST["billable"]
+            pro.description=request.POST["description"]
+            pro.grand_total = request.POST["procost"]
+            pro.save()
+            return redirect(viewProject, id)
+        else:
+            return redirect(edit_Project, id)
+    else:
+       return redirect('/')
+
+
+def deleteProject(request, id):
+    if 'login_id' in request.session:
+        log_id = request.session['login_id']
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type == 'Company':
+            com = CompanyDetails.objects.get(login_details = log_details)
+        else:
+            com = StaffDetails.objects.get(login_details = log_details).company
+
+        pro = project.objects.get(id = id)
+        pro.delete()
+        return redirect("project_list")
+
+
 
 def updateRecurringInvoice(request, id):
     if 'login_id' in request.session:

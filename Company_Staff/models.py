@@ -2211,5 +2211,10 @@ class project(models.Model):
     billable = models.CharField(max_length=255)
     company=models.ForeignKey(CompanyDetails,on_delete=models.CASCADE, null=True)
     login_details=models.ForeignKey(LoginDetails,on_delete=models.CASCADE, null=True)
+    grand_total = models.CharField(max_length=255,null=True)
+
+class projectcost(models.Model):
+    billingmethod =  models.CharField(max_length=255)
+    cost =  models.CharField(max_length=255)
 
 #End

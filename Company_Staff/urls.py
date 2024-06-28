@@ -530,6 +530,9 @@ urlpatterns = [
     path('ConvertRecurringInvoice/<int:id>',views.ConvertRecurringInvoice,name='ConvertRecurringInvoice'),
     path('viewProject/<int:id>',views.viewProject, name='viewProject'),
     path('edit_Project/<int:id>',views.edit_Project, name='edit_Project'),
+    path('updateProject/<int:id>',views.updateProject, name='updateProject'),
+    path('deleteProject/<int:id>',views.deleteProject, name='deleteProject'),
+   
    
     #---------------- Zoho Final sales order - Ginto Shaji - End--------------------
     # --------------------------------------   ashikhvu   (start)   -----------------------------------------------

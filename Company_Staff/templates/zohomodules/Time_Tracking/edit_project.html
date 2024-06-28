@@ -696,7 +696,7 @@
                         <p style="color: chocolate;">{{m}}</p>
                         {% endfor %}
 
-                        <form action="" id="home" method="post" enctype="multipart/form-data"
+                        <form action="{%url 'updateProject' p.id%}" id="home" method="post" enctype="multipart/form-data"
                             style="padding-left: 20px;">
                             {% csrf_token%}
                             <br>
@@ -737,6 +737,7 @@
                                     <b><label class="" style="font-size: medium; ">Customer </label></b>
                                 </div>
                                 <div class="col-md-6 d-flex">
+                                    <input type="hidden" name="customerId" id="customerId" value="{{p.customer.id}}">
                                     <div class="p-0 border-0 bg-none position-relative drop-box">
                                         <input required type="text" id="customer"
                                             value="{{ p.customer.title }} {{ p.customer.first_name }} {{ p.customer.last_name }}"
@@ -777,7 +778,6 @@
                             <br>
 
                             <div class="form-group row" id="address_row">
-
                                 <div class="col-md-3"><b><label for=""
                                             style="color: aliceblue; font-size: medium;">Billing Address</label></b>
                                 </div>
@@ -797,7 +797,7 @@
                                     <div class="col-md-6">
                                         <div class="d-flex">
                                             <select class="form-control bg-black text-white" id="entryType"
-                                                name="entry_type">
+                                                name="billingmethod">
                                                 <option value="">Select</option>
                                                 {% if p.billiing_method == 'Based on Project Hours' %}
                                                 <option value="Based on Project Hours" selected>Based on Project Hours</option>
@@ -814,6 +814,27 @@
                                     </div>
                                 </div>
                             </b><br>
+
+                            <script>
+                                document.getElementById("entryType").addEventListener("change", function() {
+                                    var entry = document.getElementById("entryType").value;
+                                    if (entry == "Based on Project Hours")
+                                        document.getElementById("pcost").value = "200";
+                                    else
+                                        document.getElementById("pcost").value = "7600";
+                                });
+                            </script>
+
+                            <div class="form-group row" id="address_row">
+                                <div class="col-md-3"><b><label for=""
+                                            style="color: aliceblue; font-size: medium;">Project Cost</label></b>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" id="pcost" name="procost" class="form-control "
+                                        style="background-color: black; color: white;border-radius: 5px;" value="{{p.grand_total}}" readonly>
+                                </div>
+                            </div>
+                            <br>
 
                             <b>
                                 <div class="form-group row" style="font-size: medium;">
@@ -845,6 +866,7 @@
                                     <b><label class="" style="font-size: medium; ">Employee </label></b>
                                 </div>
                                 <div class="col-md-6 d-flex">
+                                    <input type="hidden" name="employeeId" id="employeeId" value="{{p.employee.id}}">
                                     <div class="p-0 border-0 bg-none position-relative drop-box">
                                         <input required type="text" id="customer"
                                             value="{{ p.employee.title }} {{ p.employee.first_name }} {{ p.employee.last_name }}"
@@ -877,10 +899,10 @@
                                 </div>
                                 <div class="col-md-6">
                                     <input type="email" id="ex_mail" name="ex_mail" class="form-control "
-                                        style="background-color: black; color: white;border-radius: 5px;" readonly>
+                                        style="background-color: black; color: white;border-radius: 5px;" value="{{p.employee.email}}"  readonly>
                                 </div>
                                 <input type="text" style="width: 30%;display: none;" id="customer_id" name="customer_id"
-                                  value="{{p.employee.employee_email}}"  readonly>
+                                  value="{{p.employee.email}}"  readonly>
                             </div>
                             <br>
 
@@ -932,7 +954,7 @@
                                 <div class="col-md-3"><b><label for="" style="font-size: medium;">
                                             Description</label></b>
                                 </div>
-                                <div class="col-md-6"><input type="text" id="serial" name="serial"
+                                <div class="col-md-6"><input type="text" id="serial" name="description"
                                         class="form-control text-light" value="{{p.description}}">
                                 </div>
                             </div><br>
