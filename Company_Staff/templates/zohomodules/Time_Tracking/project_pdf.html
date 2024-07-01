@@ -94,26 +94,26 @@
                 <div style="width: 100%;">
                     <div class="invoice_data">
                         <div class="data_row">
-                            <div class="data_1 data_value">Rec. Invoice No: {{recInvoice.rec_invoice_no}}</div>
-                            <div class="data_2 data_value">Start Date: {{recInvoice.start_date}}</div>
+                            <div class="data_1 data_value">Project Code: {{project.project_code}}</div>
+                            <div class="data_2 data_value">Start Date: {{project.date}}</div>
                         </div>
                         <div class="data_row">
-                            <div class="data_1 data_value">End Date: {{recInvoice.end_date}}</div>
+                            <div class="data_1 data_value">End Date: {{project.end_date}}</div>
                             <div class="data_2"></div>
                         </div>
                         <div class="data_row">
-                            <div class="data_1">Payment Method: {{recInvoice.payment_method}}</div>
+                            <div class="data_1">Billing Method: {{project.billable}}</div>
                             <div class="data_2"></div>
                         </div>
                         <div class="data_row">
-                            <div class="data_1">Customer:<br><b>{{recInvoice.customer.title}}. {{recInvoice.customer.first_name}} {{recInvoice.customer.last_name}}</b><br>{{recInvoice.billing_address|linebreaksbr}}</div>
+                            <div class="data_1">Customer:<br><b>{{project.customer.title}}. {{project.customer.first_name}} {{project.customer.last_name}}</b><br>{{project.billing}}</div>
                             <div class="data_2 data_value"></div>
                         </div>
                     </div>
                 </div>
             </div>
             <hr />
-            <section class="mt-4">
+            <!-- <section class="mt-4">
                 <table class="table2">
                     <thead>
                         <tr>
@@ -139,33 +139,12 @@
                     </tbody>
                 </table>
             </section>
-            <hr>
+            <hr> -->
             <section style="margin-top: 1rem; display: flex; justify-content: right;">
                 <div style="width: 50%;" >
                     <div class="invoice_data">
                         <div class="data_row">
-                            <div class="data_1 data_value">Sub Total &nbsp;&nbsp;&nbsp;: {{recInvoice.subtotal}}</div>
-                            <div class="data_2 data_value">TAX Amount&nbsp;&nbsp;&nbsp;: {{recInvoice.tax_amount}}</div>
-                        </div>
-                        <div class="data_row">
-                            {% if recInvoice.igst != 0 %}
-                            <div class="data_1 data_value">IGST&nbsp;&nbsp;&nbsp;&nbsp;: {{recInvoice.igst}}</div>
-                            {% else %}
-                            <div class="data_2 data_value">CGST&nbsp;&nbsp;&nbsp;&nbsp;: {{recInvoice.cgst}}</div>
-                            <div class="data_2 data_value">SGST&nbsp;&nbsp;&nbsp;&nbsp;: {{recInvoice.sgst}}</div>
-                            {% endif %}
-                        </div>
-                        <div class="data_row">
-                            {% if recInvoice.adjustment != 0 %}
-                            <div class="data_1 data_value">Adjustment&nbsp;&nbsp;&nbsp;: {{recInvoice.adjustment}}</div>
-                            {% endif %}
-                            {% if recInvoice.shipping_charge != 0 %}
-                            <div class="data_1 data_value">Shipping  &nbsp;&nbsp;&nbsp;: {{recInvoice.shipping_charge}}</div>
-                            {% endif %}
-                        </div>
-                        <br>
-                        <div class="data_row">
-                            <div class="data_1 data_value"><b>GRAND TOTAL</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{recInvoice.grandtotal}}</div>
+                            <div class="data_1 data_value"><b>GRAND TOTAL</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{project.grand_total}}</div>
                         </div>
                     </div>
                 </div>

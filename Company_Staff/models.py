@@ -1033,7 +1033,6 @@ class RecurringInvoiceHistory(models.Model):
     login_details = models.ForeignKey(LoginDetails, on_delete=models.CASCADE)
     recurring_invoice = models.ForeignKey(RecurringInvoice, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
-    
     action = models.CharField(max_length=20, null=True)
 
 
@@ -2216,5 +2215,14 @@ class project(models.Model):
 class projectcost(models.Model):
     billingmethod =  models.CharField(max_length=255)
     cost =  models.CharField(max_length=255)
+
+class projecthistory(models.Model):
+    projectfr=models.ForeignKey(project,on_delete=models.CASCADE, null=True)
+    company=models.ForeignKey(CompanyDetails,on_delete=models.CASCADE, null=True)
+    login_details=models.ForeignKey(LoginDetails,on_delete=models.CASCADE, null=True)
+    date = models.DateField(auto_now_add=True)
+    action = models.CharField(max_length=20, null=True)
+
+
 
 #End

@@ -30,7 +30,7 @@ from django.urls import reverse
 from django.shortcuts import render,redirect,get_object_or_404
 from . models import *
 from decimal import Decimal
-from Company_Staff.models import Vendor, Vendor_comments_table, Vendor_doc_upload_table, Vendor_mail_table,Vendor_remarks_table,VendorContactPerson,VendorHistory,project
+from Company_Staff.models import Vendor, Vendor_comments_table, Vendor_doc_upload_table, Vendor_mail_table,Vendor_remarks_table,VendorContactPerson,VendorHistory,project,projecthistory
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from email.message import EmailMessage
@@ -20220,12 +20220,12 @@ def viewProject(request, id):
         invoice = RecurringInvoice.objects.get(id = id)
         invItems = Reccurring_Invoice_item.objects.filter(reccuring_invoice = invoice)
         allproject = project.objects.filter(company = cmp)
-        cmts = Recurring_Invoice_Comments.objects.filter(recurring_invoice = invoice)
-        hist = RecurringInvoiceHistory.objects.filter(recurring_invoice = invoice)
-        last_history = RecurringInvoiceHistory.objects.filter(recurring_invoice = invoice).last()
+       
+        hist = projecthistory.objects.filter(projectfr = prod)
+        last_history = projecthistory.objects.filter(projectfr = prod).last()
         created = RecurringInvoiceHistory.objects.get(recurring_invoice = invoice, action = 'Created')
         context = {
-                'cmp':cmp,'allmodules':allmodules, 'details':dash_details, 'invoice':invoice, 'invItems': invItems, 'allproject':allproject, 'comments':cmts, 'history':hist, 'last_history':last_history, 'created':created,
+                'cmp':cmp,'allmodules':allmodules, 'details':dash_details, 'invoice':invoice, 'invItems': invItems, 'allproject':allproject,  'history':hist, 'last_history':last_history, 'created':created,
                 'project':prod,
             }
         return render(request, 'zohomodules/Time_Tracking/view_project.html', context)
@@ -20257,6 +20257,13 @@ def updateProject(request, id):
             pro.description=request.POST["description"]
             pro.grand_total = request.POST["procost"]
             pro.save()
+            history =  projecthistory(
+                company = com,
+                login_details = log_details,
+                projectfr_id = id,
+                action = 'edited'
+                 )
+            history.save()
             return redirect(viewProject, id)
         else:
             return redirect(edit_Project, id)
@@ -20583,6 +20590,48 @@ def shareRecurringInvoiceToEmail(request,id):
             print(e)
             messages.error(request, f'{e}')
             return redirect(viewRecurringInvoice, id)
+
+def shareprojectviaEmail(request,id):
+    if 'login_id' in request.session:
+        log_id = request.session['login_id']
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type == 'Company':
+            com = CompanyDetails.objects.get(login_details = log_details)
+        else:
+            com = StaffDetails.objects.get(login_details = log_details).company
+        
+        prod = project.objects.get(id = id)
+       
+        try:
+            if request.method == 'POST':
+                emails_string = request.POST['email_ids']
+
+                # Split the string by commas and remove any leading or trailing whitespace
+                emails_list = [email.strip() for email in emails_string.split(',')]
+                email_message = request.POST['email_message']
+                # print(emails_list)
+            
+                context = {'project':prod,'cmp':com}
+                template_path = 'zohomodules/Time_Tracking/project_pdf.html'
+                template = get_template(template_path)
+
+                html  = template.render(context)
+                result = BytesIO()
+                pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+                pdf = result.getvalue()
+                filename = f'Recurring Invoice_{prod.project_code}'
+                subject = f"Recurring_Invoice_{prod.project_code}"
+                # from django.core.mail import EmailMessage as EmailMsg
+                email = EmailMsg(subject, f"Hi,\nPlease find the attached Recurring Invoice for - REC. INVOICE-{prod.project_code}. \n{email_message}\n\n--\nRegards,\n{com.company_name}\n{com.address}\n{com.state} - {com.country}\n{com.contact}", from_email=settings.EMAIL_HOST_USER, to=emails_list)
+                email.attach(filename, pdf, "application/pdf")
+                email.send(fail_silently=False)
+
+                messages.success(request, 'Project details has been shared via email successfully..!')
+                return redirect(viewProject,id)
+        except Exception as e:
+            print(e)
+            messages.error(request, f'{e}')
+            return redirect(viewProject, id)
 
 def downloadRecurringInvoiceSampleImportFile(request):
     recInv_table_data = [['SLNO','CUSTOMER','DATE','PLACE OF SUPPLY','PROFILE NAME','ENTRY TYPE','RI NO','TERMS','REPEAT EVERY','PRICE LIST','DESCRIPTION','SUB TOTAL','IGST','CGST','SGST','TAX AMOUNT','ADJUSTMENT','SHIPPING CHARGE','GRAND TOTAL','ADVANCE'],['1', 'Kevin Debryne', '2024-03-20', '[KL]-Kerala', 'Kevin Debryne','Invoice','RI100','NET 30','3 Months','','','1000','0','25','25','50','0','0','1050','1000']]
@@ -28563,6 +28612,7 @@ def project_list(request):
             dash_details = CompanyDetails.objects.get(login_details=log_details)
             allmodules = ZohoModules.objects.get(company=dash_details, status='New')
             projectd= project.objects.all()
+            action = projecthistory.objects.all()
            
         else:
             return redirect('/')
@@ -28571,6 +28621,7 @@ def project_list(request):
             'details': dash_details,
             'allmodules': allmodules,
             'project': projectd,
+            'action' : action
         }
         
         # Render the template with the context data
@@ -43599,10 +43650,17 @@ def create_project(request):
             login_details =log_details.id
             data = project(project_name=pname, project_code = pcode, email=custid.customer_email, billiing=address,
                            billable=billable,date=date,end_date=end,employee_mail=empid.email,
-                           task_details=tdetails,task_name=tname,description=description, billiing_method=bill_method,
+                           task_details=tdetails,task_name=tname,description=description, billiing_method=billable,
                            customer_id=custname,employee_id=employee,company_id=com.id,login_details_id=login_details
                             )
             data.save()
+            history =  projecthistory(
+                company = com,
+                login_details = log_details,
+                projectfr = data,
+                action = 'created'
+                 )
+            history.save()
             return redirect("new_project")
 
 
