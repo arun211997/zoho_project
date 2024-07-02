@@ -49,6 +49,10 @@
         padding: 2px 6px;
     }
 
+    #shour{
+        display: none;
+    }
+
     #customer_sel+.selectize-control .selectize-dropdown-content .option:hover {
         background-color: white !important;
         color: black !important;
@@ -815,13 +819,43 @@
                                 </div>
                             </b><br>
 
+                            <b>
+                                <div class="form-group row" id="shour"  style="font-size: medium;border: none;">
+                                    <div  style="display: flex;border: none;">
+                                    <div class="col-md-3" >
+                                        <label for="date2">Hours</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div >
+                                            <input type="number" id="hours" name="hours" class="form-control "
+                                            style="background-color: black; color: white;border-radius: 5px;" value="" >
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </b><br>
+
                             <script>
                                 document.getElementById("entryType").addEventListener("change", function() {
                                     var entry = document.getElementById("entryType").value;
-                                    if (entry == "Based on Project Hours")
-                                        document.getElementById("pcost").value = "200";
-                                    else
-                                        document.getElementById("pcost").value = "7600";
+                                    if (entry == "Based on Project Hours"){
+                                         document.getElementById("shour").style.display = "block";
+                                         document.getElementById("pcost").value = "";
+                                    }
+                                        
+                                    else{
+                                         document.getElementById("shour").style.display = "none";
+                                         document.getElementById("pcost").value = "7800";
+                                    }
+                                        
+                                });
+                            </script>
+                        
+                            <script>
+                                document.getElementById("hours").addEventListener("input", function() {
+                                    var hour = document.getElementById("hours").value;
+                                    var cost = hour * 200;
+                                    document.getElementById("pcost").value = cost;
                                 });
                             </script>
 

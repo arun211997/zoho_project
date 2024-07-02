@@ -372,7 +372,6 @@
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning-emphasis">Dashboard</a>
         </li>
-        <li class="breadcrumb-item"><a class="text-warning-emphasis">Sales</a></li>
         <li class="breadcrumb-item"><a href="{% url 'project_list' %}" class="text-warning-emphasis">Project</a></li>
         <li class="breadcrumb-item" aria-current="page" id="over">Overview</li>
         <li class="breadcrumb-item" aria-current="page" id="tmplt" style="display: none;">Templates</li>
@@ -739,7 +738,7 @@
                       <div class="divider"></div>
                       <div class="paid-by mb-4 d-flex justify-content-between">
                         <span>Billing Method:</span>
-                        <span>{{project.billable}}</span>
+                        <span>{{project.billiing_method}}</span>
                       </div>
                       <div class="createdby d-flex justify-content-between">
                         <p class="">Created By:</p>
@@ -809,8 +808,7 @@
                                   <div class="col-5">
                                     <p><b class="text-black">To</b>,</p>
                                     <div style="margin-left: 10%;">
-                                      <h3>{{ invoice.customer.title }}. {{ invoice.customer.first_name }} {{
-                                        invoice.customer.last_name }}</h3>
+                                      <h3>{{ project.customer.title }}. {{ project.customer.first_name }} {{project.customer.last_name }}</h3>
                                       <p class="text-black">
                                         {{ invoice.billing_address|linebreaksbr }}
                                       </p>
@@ -820,11 +818,11 @@
                                 <hr class="mx-3">
                                 <div class="row extra-info pb-3 text-black fw-bold">
                                   <div class="col-6">
-                                    <p>Rec. Invoice Date: <span>{{invoice.start_date | date:'d-m-Y'}}</span></p>
+                                    <p>Project Start Date: <span>{{project.start_date | date:'d-m-Y'}}</span></p>
                                   </div>
                                   <div class="col-6">
-                                    <p>End Date : <span>{{invoice.end_date | date:'d-m-Y'}}</span></p>
-                                    <p>Payment Method : <span>{{invoice.payment_method}}</span></p>
+                                    <p>End Date : <span>{{project.end_date | date:'d-m-Y'}}</span></p>
+                                    <p>Billing Method : <span>{{project.billiing_method}}</span></p>
                                   </div>
                                 </div>
                                 <hr class="mx-3">
@@ -1751,7 +1749,7 @@
     var opt =
     {
       margin: 1,
-      filename: 'RecurringInvoice_slip_' + recInvNo + '.pdf',
+      filename: 'Project_' + recInvNo + '.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }

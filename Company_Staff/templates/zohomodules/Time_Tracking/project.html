@@ -47,8 +47,6 @@
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning-emphasis">Dashboard</a>
         </li>
-        <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning-emphasis">Time
-            Tracking</a></li>
         <li class="breadcrumb-item" aria-current="page">Project</li>
       </ol>
     </nav>
@@ -91,16 +89,16 @@
                     <a class="dropdown-item dropdown-item-filter" href="javascript:void(0);"
                       style="background-color: black; color: white;">All</a>
                     <a class="dropdown-item dropdown-item-filter" href="javascript:void(0);"
-                      style="background-color: black; color: white;">Active</a>
+                      style="background-color: black; color: white;">edited</a>
                     <a class="dropdown-item dropdown-item-filter" href="javascript:void(0);"
-                      style="background-color: black; color: white;">Inactive</a>
+                      style="background-color: black; color: white;">saved</a>
                   </div>
                 </div>
-                <a style="border: 1px solid; border-radius: 5px; height: 2.4rem; display: flex; align-items: center;margin-left:7px;"
+                <!-- <a style="border: 1px solid; border-radius: 5px; height: 2.4rem; display: flex; align-items: center;margin-left:7px;"
                   data-bs-toggle="modal" href="#importModal" class="btn btn-outline-warning">
                   <i class="fa fa-file-excel p-1" style="font-size: large;"></i>
                   <span style="font-size: 2vh; margin-left: 0.5rem;" class="text-center">Import</span>
-                </a>
+                </a> -->
 
                 <a id="exportButton"
                   style="border: 1px solid; border-radius: 5px; height: 2.4rem; display: flex; align-items: center;margin-left: 10px;"
@@ -158,8 +156,12 @@
                           <td class="bg-dark text-white"
                             style="color: rgb(0, 0, 0); background-color: black;border: none;">
                             {{p.billiing_method}}<a href=""></a></td>
-                          <td class="bg-dark text-white"
-                            style="color: rgb(0, 0, 0); background-color: black;border: none;"><a href=""></a></td>
+                          {% for a in action %}
+                            {% if a.projectfr_id == p.id %}
+                                 <td class="bg-dark text-white"
+                                style="color: rgb(255, 255, 255); background-color: black;border: none;">{{ a.action }}</td>
+                            {% endif %}
+                          {% endfor %}
                         </tr>
                         {% endfor %}
                       </tbody>
@@ -281,7 +283,7 @@
           var ws = XLSX.utils.table_to_sheet(table);
           var wb = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-          XLSX.writeFile(wb, 'Retainer_invoice.xlsx');
+          XLSX.writeFile(wb, 'project.xlsx');
         }
 
         // Add event listener to the export button
