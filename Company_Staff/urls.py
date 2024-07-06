@@ -533,6 +533,8 @@ urlpatterns = [
     path('updateProject/<int:id>',views.updateProject, name='updateProject'),
     path('deleteProject/<int:id>',views.deleteProject, name='deleteProject'),
     path('shareprojectviaEmail/<int:id>',views.shareprojectviaEmail, name='shareprojectviaEmail'),
+    path('projectPdf/<int:id>',views.projectPdf, name='projectPdf'),
+    
   
     #---------------- Zoho Final sales order - Ginto Shaji - End--------------------
     # --------------------------------------   ashikhvu   (start)   -----------------------------------------------

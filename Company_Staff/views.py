@@ -2627,7 +2627,7 @@ def create_employee(request):
             itn=request.POST['itn']
             an=request.POST['an']
             if payroll_employee.objects.filter(Aadhar=an,company=company_details):
-                    messages.error(request,'Aadhra number already exists')
+                    messages.error(request,'AaDHAR number already exists')
                     return redirect('payroll_employee_create')   
             uan=request.POST['uan'] 
             pfn=request.POST['pfn']
@@ -20212,20 +20212,14 @@ def viewProject(request, id):
         else:
             cmp = StaffDetails.objects.get(login_details = log_details).company
             dash_details = StaffDetails.objects.get(login_details=log_details)
-            
-      
         allmodules= ZohoModules.objects.get(company = cmp)
-
         prod = project.objects.get(id = id)
-        invoice = RecurringInvoice.objects.get(id = id)
-        invItems = Reccurring_Invoice_item.objects.filter(reccuring_invoice = invoice)
         allproject = project.objects.filter(company = cmp)
-       
         hist = projecthistory.objects.filter(projectfr = prod)
         last_history = projecthistory.objects.filter(projectfr = prod).last()
-        created = RecurringInvoiceHistory.objects.get(recurring_invoice = invoice, action = 'Created')
+       
         context = {
-                'cmp':cmp,'allmodules':allmodules, 'details':dash_details, 'invoice':invoice, 'invItems': invItems, 'allproject':allproject,  'history':hist, 'last_history':last_history, 'created':created,
+                'cmp':cmp,'allmodules':allmodules, 'details':dash_details,'allproject':allproject,  'history':hist, 'last_history':last_history, 
                 'project':prod,
             }
         return render(request, 'zohomodules/Time_Tracking/view_project.html', context)
@@ -20257,13 +20251,16 @@ def updateProject(request, id):
             pro.description=request.POST["description"]
             pro.grand_total = request.POST["procost"]
             pro.save()
+           
             history =  projecthistory(
+                date=timezone.now(),
                 company = com,
                 login_details = log_details,
                 projectfr_id = id,
                 action = 'edited'
-                 )
+                )
             history.save()
+
             return redirect(viewProject, id)
         else:
             return redirect(edit_Project, id)
@@ -20279,7 +20276,6 @@ def deleteProject(request, id):
             com = CompanyDetails.objects.get(login_details = log_details)
         else:
             com = StaffDetails.objects.get(login_details = log_details).company
-
         pro = project.objects.get(id = id)
         pro.delete()
         return redirect("project_list")
@@ -20549,6 +20545,36 @@ def recurringInvoicePdf(request,id):
     else:
         return redirect('/')
 
+def projectPdf(request,id):
+    if 'login_id' in request.session:
+        log_id = request.session['login_id']
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type == 'Company':
+            com = CompanyDetails.objects.get(login_details = log_details)
+        else:
+            com = StaffDetails.objects.get(login_details = log_details).company
+        
+        prod = project.objects.get(id = id)
+        context = {'project':prod}
+        template_path = 'zohomodules/Time_Tracking/project_pdf.html'
+        fname = 'Project'+prod.project_code
+        # Create a Django response object, and specify content_type as pdftemp_
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] =f'attachment; filename = {fname}.pdf'
+        # find the template and render it.
+        template = get_template(template_path)
+        html = template.render(context)
+
+        # create a pdf
+        pisa_status = pisa.CreatePDF(
+        html, dest=response)
+        # if error then show some funny view
+        if pisa_status.err:
+            return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        return response
+    else:
+        return redirect('/')
+
 def shareRecurringInvoiceToEmail(request,id):
     if 'login_id' in request.session:
         log_id = request.session['login_id']
@@ -20619,8 +20645,8 @@ def shareprojectviaEmail(request,id):
                 result = BytesIO()
                 pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
                 pdf = result.getvalue()
-                filename = f'Recurring Invoice_{prod.project_code}'
-                subject = f"Recurring_Invoice_{prod.project_code}"
+                filename = f'Project_{prod.project_code}'
+                subject = f"Project_{prod.project_code}"
                 # from django.core.mail import EmailMessage as EmailMsg
                 email = EmailMsg(subject, f"Hi,\nPlease find the attached Recurring Invoice for - REC. INVOICE-{prod.project_code}. \n{email_message}\n\n--\nRegards,\n{com.company_name}\n{com.address}\n{com.state} - {com.country}\n{com.contact}", from_email=settings.EMAIL_HOST_USER, to=emails_list)
                 email.attach(filename, pdf, "application/pdf")
@@ -43648,18 +43674,20 @@ def create_project(request):
             empid=payroll_employee.objects.get(id=employee)
             company_id=com.id
             login_details =log_details.id
+            cost =request.POST["procost"]
             data = project(project_name=pname, project_code = pcode, email=custid.customer_email, billiing=address,
                            billable=billable,date=date,end_date=end,employee_mail=empid.email,
-                           task_details=tdetails,task_name=tname,description=description, billiing_method=billable,
-                           customer_id=custname,employee_id=employee,company_id=com.id,login_details_id=login_details
+                           task_details=tdetails,task_name=tname,description=description, billiing_method=billmethod,
+                           customer_id=custname,employee_id=employee,company_id=com.id,login_details_id=login_details, grand_total=cost,
                             )
             data.save()
             history =  projecthistory(
+                date=timezone.now(),
                 company = com,
                 login_details = log_details,
                 projectfr = data,
                 action = 'created'
-                 )
+            )
             history.save()
             return redirect("new_project")
 

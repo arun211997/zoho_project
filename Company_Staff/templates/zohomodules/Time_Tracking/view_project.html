@@ -503,7 +503,7 @@
                           <i class="fas fa-share"></i>
                       </a>
 
-                        <a href="{% url 'recurringInvoicePdf' invoice.id %}"
+                        <a href="{% url 'projectPdf' project.id %}"
                           class="btn btn-outline-warning small_btn mt-2 ms-1" style="display: none;" title="PDF"
                           id="pdf_btn">
                           <i class="fa fa-file-pdf"></i>
@@ -775,15 +775,12 @@
                           <div id="ember2512" class="tooltip-container ember-view ribbon text-ellipsis">
                             <section>
                               <div class="row py-3 bg-warning align-items-center">
-                                <div class="col-3">
-                                  <span class="bg-white text-black px-4 py-2"
-                                    style="border-radius: 3px;">{{invoice.status}}</span>
-                                </div>
+                                
                                 <div class="col-6">
-                                  <h4 class="text-white p-2 fw-bold">RECURRING INVOICE</h4>
+                                  <h4 class="text-white p-2 fw-bold">PROJECT</h4>
                                 </div>
                                 <div class="col-3">
-                                  <span class="fw-bold me-2 h5 text-white float-end">#{{invoice.rec_invoice_no}}</span>
+                                  <span class="fw-bold me-2 h5 text-white float-end">#{{project.project_code}}</span>
                                 </div>
                               </div>
                             </section>
@@ -794,23 +791,23 @@
                                   <div class="col-7">
                                     <p><b class="text-black">From</b>,</p>
                                     <div style="margin-left: 10%;">
-                                      <h3>{{ invoice.company.company_name }}</h3>
+                                      <h4>{{ project.company.company_name }}</h3>
                                       <p class="text-black">
-                                        {{ invoice.company.contact }} <br>
-                                        {{ invoice.company.address }} <br>
-                                        {{ invoice.company.city }} <br>
-                                        {{ invoice.company.state|slice:'5:' }},
-                                        {{ invoice.company.country }} <br>
-                                        {{ invoice.company.pincode }}
+                                        {{ project.company.contact }} <br>
+                                        {{ project.company.address }} <br>
+                                        {{ project.company.city }} <br>
+                                        {{ project.company.state|slice:'5:' }},
+                                        {{ project.company.country }} <br>
+                                        {{ project.company.pincode }}
                                       </p>
                                     </div>
                                   </div>
                                   <div class="col-5">
                                     <p><b class="text-black">To</b>,</p>
                                     <div style="margin-left: 10%;">
-                                      <h3>{{ project.customer.title }}. {{ project.customer.first_name }} {{project.customer.last_name }}</h3>
+                                      <h4>{{ project.customer.title }}. {{ project.customer.first_name }} {{project.customer.last_name }}</h3>
                                       <p class="text-black">
-                                        {{ invoice.billing_address|linebreaksbr }}
+                                        {{ project.billiing|linebreaksbr }}
                                       </p>
                                     </div>
                                   </div>
@@ -818,7 +815,7 @@
                                 <hr class="mx-3">
                                 <div class="row extra-info pb-3 text-black fw-bold">
                                   <div class="col-6">
-                                    <p>Project Start Date: <span>{{project.start_date | date:'d-m-Y'}}</span></p>
+                                    <p>Project Start Date: <span>{{project.date | date:'d-m-Y'}}</span></p>
                                   </div>
                                   <div class="col-6">
                                     <p>End Date : <span>{{project.end_date | date:'d-m-Y'}}</span></p>
@@ -828,99 +825,17 @@
                                 <hr class="mx-3">
                               </div>
                             </section>
-
-                            <section class="table-responsive mt-4">
-                              <table class=" table table-hover table-bordered border-dark" id="templateTable1">
-                                <thead class="bg-warning">
-                                  <tr class="text-center text-black" style="font-weight: bold;">
-                                    <td>Items</td>
-                                    <td>HSN</td>
-                                    <td>Price</td>
-                                    <td>Quantity</td>
-                                    <td>Tax</td>
-                                    <td>Discount</td>
-                                    <td>Total</td>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {% for j in invItems %}
-                                  <tr class="text-black text-center">
-                                    <td style="color:black; text-align: center;">{{j.item.item_name}}</td>
-                                    <td style="color:black">{{j.hsn}}</td>
-                                    <td style="color:black">{{j.price}}</td>
-                                    <td style="color:black">{{j.quantity}}</td>
-                                    <td style="color:black">{{j.tax_rate}} %</td>
-                                    <td style="color:black">{{j.discount}} </td>
-                                    <td style="color:black">{{j.total}}</td>
-                                  </tr>
-                                  {%endfor%}
-                                </tbody>
-                              </table>
-                            </section>
-
                             <section class="balance-info">
                               <div class="row">
                                 <div class="col-md-7"></div>
                                 <div class="col-md-5">
-                                  <table class="table table-borderless">
-                                    <tbody>
-                                      <tr>
-                                        <td style="color: #000;">Sub Total</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.subtotal}}</td>
-                                      </tr>
-
-                                      {% if invoice.igst != 0 %}
-                                      <tr>
-                                        <td style="color: #000;">IGST</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.igst}}</td>
-                                      </tr>
-                                      {% endif %}
-                                      {% if invoice.cgst != 0 %}
-                                      <tr>
-                                        <td style="color: #000;">CGST</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.cgst}}</td>
-
-                                      </tr>
-                                      {% endif %}
-                                      {% if invoice.sgst != 0 %}
-                                      <tr>
-                                        <td style="color: #000;">SGST</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.sgst}}</td>
-                                      </tr>
-                                      {% endif %}
-                                      <tr>
-                                        <td style="color: #000;">Tax Amount</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.tax_amount}}</td>
-                                      </tr>
-                                      {% if invoice.shipping_charge != 0 %}
-                                      <tr>
-                                        <td style="color: #000;">Shipping Charge</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.shipping_charge}}</td>
-                                      </tr>
-                                      {% endif %}
-                                      {% if invoice.adjustment != 0 %}
-                                      <tr>
-                                        <td style="color: #000;">Adjustment</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.adjustment}}</td>
-                                      </tr>
-                                      {% endif %}
-                                    </tbody>
-
-                                  </table>
                                   <hr style="background-color: #000000;">
                                   <table class="table table-borderless">
                                     <tbody>
                                       <tr>
                                         <th style="color: #000;">Grand Total</th>
                                         <th style="color: #000;">:</th>
-                                        <th class="text-right" style="color: #000;">{{invoice.grandtotal}} /-</th>
+                                        <th class="text-right" style="color: #000;">{{project.grand_total}} /-</th>
                                       </tr>
                                     </tbody>
                                   </table>
@@ -932,365 +847,9 @@
                         </div>
                       </div>
                     </div>
-
-                    <!-- template2 -->
-                    <div id="whatToPrint2" class="printTemplates template2" style="display: none;">
-                      <div class="page" size="A4">
-                        <div class="p-4">
-                          <div id="ember2512" class="tooltip-container ember-view ribbon text-ellipsis">
-                            <section>
-                              <div class="row py-3 align-items-center">
-                                <div class="col-3">
-                                  <span class="bg-warning text-black px-4 py-2"
-                                    style="border-radius: 3px;">{{invoice.status}}</span>
-                                </div>
-                                <div class="col-6">
-                                  <h4 class="text-black p-2 fw-bold">RECURRING INVOICE</h4>
-                                </div>
-                                <div class="col-3">
-                                  <span class="fw-bold me-2 h5 text-black float-end"><span class="fw-normal">Rec.
-                                      Invoice No.</span><br>#{{invoice.rec_invoice_no}}</span>
-                                </div>
-                              </div>
-                            </section>
-                            <hr>
-                            <section class="store-user mt-2">
-                              <div class="col-12">
-                                <div class="row pb-3">
-                                  <div class="col-7">
-                                    <p class="bg-warning"
-                                      style="border-top-right-radius: 4vh; border-bottom-right-radius: 4vh; width: fit-content; padding: 5px 60px 5px 10px;">
-                                      <b class="text-black">COMPANY ADDRESS</b>,
-                                    </p>
-                                    <div style="margin-left: 10%;">
-                                      <h3>{{ invoice.company.company_name }}</h3>
-                                      <p class="text-black">
-                                        {{ invoice.company.contact }} <br>
-                                        {{ invoice.company.address }} <br>
-                                        {{ invoice.company.city }} <br>
-                                        {{ invoice.company.state|slice:'5:' }},
-                                        {{ invoice.company.country }} <br>
-                                        {{ invoice.company.pincode }}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div class="col-5">
-                                    <p class="bg-warning"
-                                      style="border-top-right-radius: 4vh; border-bottom-right-radius: 4vh; width: fit-content; padding: 5px 60px 5px 10px;">
-                                      <b class="text-black">BILLING ADDRESS</b>,
-                                    </p>
-                                    <div style="margin-left: 10%;">
-                                      <h3>{{ invoice.customer.title }}. {{ invoice.customer.first_name }} {{
-                                        invoice.customer.last_name }}</h3>
-                                      <p class="text-black">
-                                        {{ invoice.billing_address|linebreaksbr }}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                                <hr class="mx-3">
-                                <div class="row extra-info pb-3 text-black fw-bold">
-                                  <div class="col-6">
-                                    <p>Rec. Invoice Date: <span>{{invoice.start_date | date:'d-m-Y'}}</span></p>
-                                    <p>Repeat Every: <span>{{invoice.repeat_every.repeat_every}}</span></p>
-                                  </div>
-                                  <div class="col-6">
-                                    <p>End Date : <span>{{invoice.end_date | date:'d-m-Y'}}</span></p>
-                                    <p>Payment Method : <span>{{invoice.payment_method}}</span></p>
-                                  </div>
-                                </div>
-                                <hr class="mx-3">
-                              </div>
-                            </section>
-
-                            <section class="table-responsive mt-4">
-                              <table class=" table table-hover table-bordered border-dark" id="templateTable2">
-                                <thead class="bg-warning">
-                                  <tr class="text-center text-black" style="font-weight: bold;">
-                                    <td>Items</td>
-                                    <td>HSN</td>
-                                    <td>Price</td>
-                                    <td>Quantity</td>
-                                    <td>Tax</td>
-                                    <td>Discount</td>
-                                    <td>Total</td>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {% for j in invItems %}
-                                  <tr class="text-black text-center">
-                                    <td style="color:black; text-align: center;">{{j.item.item_name}}</td>
-                                    <td style="color:black">{{j.hsn}}</td>
-                                    <td style="color:black">{{j.price}}</td>
-                                    <td style="color:black">{{j.quantity}}</td>
-                                    <td style="color:black">{{j.tax_rate}} %</td>
-                                    <td style="color:black">{{j.discount}} </td>
-                                    <td style="color:black">{{j.total}}</td>
-                                  </tr>
-                                  {%endfor%}
-                                </tbody>
-                              </table>
-                            </section>
-
-                            <section class="balance-info">
-                              <div class="row">
-                                <div class="col-md-7"></div>
-                                <div class="col-md-5">
-                                  <table class="table table-borderless">
-                                    <tbody>
-                                      <tr>
-                                        <td style="color: #000;">Sub Total</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.subtotal}}</td>
-                                      </tr>
-
-                                      {% if invoice.igst != 0 %}
-                                      <tr>
-                                        <td style="color: #000;">IGST</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.igst}}</td>
-                                      </tr>
-                                      {% endif %}
-                                      {% if invoice.cgst != 0 %}
-                                      <tr>
-                                        <td style="color: #000;">CGST</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.cgst}}</td>
-
-                                      </tr>
-                                      {% endif %}
-                                      {% if invoice.sgst != 0 %}
-                                      <tr>
-                                        <td style="color: #000;">SGST</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.sgst}}</td>
-                                      </tr>
-                                      {% endif %}
-                                      <tr>
-                                        <td style="color: #000;">Tax Amount</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.tax_amount}}</td>
-                                      </tr>
-                                      {% if invoice.shipping_charge != 0 %}
-                                      <tr>
-                                        <td style="color: #000;">Shipping Charge</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.shipping_charge}}</td>
-                                      </tr>
-                                      {% endif %}
-                                      {% if invoice.adjustment != 0 %}
-                                      <tr>
-                                        <td style="color: #000;">Adjustment</td>
-                                        <td style="color: #000;">:</td>
-                                        <td class="text-right" style="color: #000;">{{invoice.adjustment}}</td>
-                                      </tr>
-                                      {% endif %}
-                                    </tbody>
-
-                                  </table>
-                                  <hr style="background-color: #000000;">
-                                  <table class="table table-borderless">
-                                    <tbody>
-                                      <tr>
-                                        <th style="color: #000;">Grand Total</th>
-                                        <th style="color: #000;">:</th>
-                                        <th class="text-right" style="color: #000;">{{invoice.grandtotal}} /-</th>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                              </div>
-                            </section>
-
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- template3 -->
-                    <div id="whatToPrint3" class="printTemplates template3" style="display: none;">
-                      <div class="page" size="A4">
-                        <div class="" id="printdiv3">
-                          <div class="row">
-                            <div class="col-sm-12 py-3"
-                              style="background-image: linear-gradient(#ffae1f, black); color: white;">
-                              <p style="font-size: 4vh; text-align: center;">RECURRING INVOICE</p>
-                              <p style=" text-align: center;"> {{cmp.company_name}} <br>
-                                {{cmp.address}} <br>
-                                {{cmp.city}},
-                                {{cmp.state}}<br>
-                                {{cmp.login_details.email}}
-                                <br>
-                              </p>
-                            </div>
-
-                            <div class="row col-12">
-                              <!-- <div class="col-md-1"></div> -->
-                              <div class="col-6 py-3 px-5">
-                                <p style="color:black;"> <span style=" font-weight: bold;">To: </span><br>
-                                  {{invoice.customer.title}} {{invoice.customer.first_name}}
-                                  {{invoice.customer.last_name}}<br>
-                                  {{invoice.billing_address|linebreaksbr }}
-                                </p>
-                              </div>
-                              <!-- <div class="col-md-1"></div> -->
-                              <div class="col-6 py-3 px-3">
-                                <table class="table table-borderless">
-                                  <tbody>
-                                    <tr>
-                                      <td style="color: #000; font-weight: bold;">Rec. Invoice No</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{ invoice.rec_invoice_no }}</td>
-                                    </tr>
-                                    {%if invoice.salesOrder_no %}
-                                    <tr>
-                                      <td style="color: #000; font-weight: bold;">Order No</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{ invoice.salesOrder_no }}</td>
-                                    </tr>
-                                    {% endif %}
-
-                                    <tr>
-                                      <td style="color: #000; font-weight: bold;">Start Date</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{invoice.start_date | date:'d-m-Y'}}
-                                      <td>
-                                    </tr>
-
-                                    <tr>
-                                      <td style="color: #000; font-weight: bold;">End Date</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{invoice.end_date | date:'d-m-Y'}}
-                                      </td>
-
-                                    </tr>
-
-                                    <tr>
-                                      <td style="color: #000; font-weight: bold;">Payment Method</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{invoice.payment_method}}</td>
-
-                                    </tr>
-                                  </tbody>
-
-                                </table>
-                              </div>
-                            </div>
-
-                            <div class="col-md-12 px-4">
-                              <table class="table table-hover table-bordered  template3table" id="table3">
-                                <thead class="bg-warning">
-                                  <tr class="template3tablehead">
-                                    <th class="text-center text-black">Items</th>
-                                    <th class="text-center text-black">HSN</th>
-                                    <th class="text-center text-black">Quantity</th>
-                                    <th class="text-center text-black">Rate</th>
-                                    <th class="text-center text-black">Tax</th>
-                                    <th class="text-center text-black">Discount</th>
-                                    <th class="text-center text-black">Total</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {% for itm in invItems %}
-                                  <tr>
-                                    <td class="text-center" style="color: black;">{{ itm.item.item_name}}</td>
-                                    <td class="text-center" style="color: black;">{{ itm.hsn }}</td>
-                                    <td class="text-center" style="color: black;">{{ itm.quantity }}</td>
-                                    <td class="text-center" style="color: black;">{{ itm.price }}</td>
-                                    <td class="text-center" style="color: black;">{{ itm.tax_rate }}%</td>
-                                    <td class="text-center" style="color: black;">{{ itm.discount }}</td>
-                                    <td class="text-center" style="color: black;">{{ itm.total }}</td>
-                                  </tr>
-                                  {% endfor %}
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                          <section class="balance-info mb-4">
-                            <div class="row">
-                              <div class="col-md-7"></div>
-                              <div class="col-md-4">
-                                <br>
-                                <table class="table table-borderless">
-                                  <tbody>
-                                    <tr>
-                                      <td style="color: #000;">Sub Total</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{invoice.subtotal}}</td>
-                                    </tr>
-
-                                    {% if invoice.igst != 0 %}
-                                    <tr>
-                                      <td style="color: #000;">IGST</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{invoice.igst}}</td>
-                                    </tr>
-                                    {% endif %}
-                                    {% if invoice.cgst != 0 %}
-                                    <tr>
-                                      <td style="color: #000;">CGST</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{invoice.cgst}}</td>
-
-                                    </tr>
-                                    {% endif %}
-                                    {% if invoice.sgst != 0 %}
-                                    <tr>
-                                      <td style="color: #000;">SGST</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{invoice.sgst}}</td>
-                                    </tr>
-                                    {% endif %}
-                                    <tr>
-                                      <td style="color: #000;">Tax Amount</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{invoice.tax_amount}}</td>
-                                    </tr>
-                                    {% if invoice.shipping_charge != 0 %}
-                                    <tr>
-                                      <td style="color: #000;">Shipping Charge</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{invoice.shipping_charge}}</td>
-                                    </tr>
-                                    {% endif %}
-                                    {% if invoice.adjustment != 0 %}
-                                    <tr>
-                                      <td style="color: #000;">Adjustment</td>
-                                      <td style="color: #000;">:</td>
-                                      <td class="text-right" style="color: #000;">{{invoice.adjustment}}</td>
-                                    </tr>
-                                    {% endif %}
-                                  </tbody>
-
-                                </table>
-                                <hr style="background-color: #000000;">
-                                <table class="table table-borderless">
-                                  <tbody>
-                                    <tr>
-                                      <th style="color: #000;">Grand Total</th>
-                                      <th style="color: #000;">:</th>
-                                      <th class="text-right" style="color: #000;">{{invoice.grandtotal}}</th>
-                                    </tr>
-                                    <tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </section>
-                        </div>
-                      </div>
-                    </div>
-
-
-
-                  </div>
                   <div id="templateToggle" class="templateToggleSegment mt-3 mb-0 w-100 d-flex justify-content-center">
                     <button id="toggleTemplate1" onclick="toggleTemplate('whatToPrint1','toggleTemplate1')"
                       class="btn btn-outline-warning btn-sm m-2 active templateToggleButtons">1</button>
-                    <button id="toggleTemplate2" onclick="toggleTemplate('whatToPrint2','toggleTemplate2')"
-                      class="btn btn-outline-warning btn-sm m-2 templateToggleButtons">2</button>
-                    <button id="toggleTemplate3" onclick="toggleTemplate('whatToPrint3','toggleTemplate3')"
-                      class="btn btn-outline-warning btn-sm m-2 templateToggleButtons">3</button>
                   </div>
                 </div>
               </div>
@@ -1347,109 +906,6 @@
 </div>
 
 <!-- Add Document  -->
-<div class="modal fade" id="bnk_files">
-  <div class="modal-dialog">
-    <div class="modal-content" style="background-color: #3b3b3b;">
-      <div class="modal-header">
-        <h3 class="modal-title text-light" id="exampleModalLabel">Add Documents</h3>
-        <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" style="font-size: x-large;">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3" style="background-color: #000;">
-        <form action="{% url 'attachRecurringInvoiceFile' invoice.id %}" method="post" class="needs-validation"
-          novalidate enctype="multipart/form-data">
-          {%csrf_token%}
-          <div class="row mt-2">
-            <div class="col-md-3">
-              <label class="pt-2" for="origin" style="color: white;">Add File</label>
-            </div>
-            <div class="col-md-9">
-              <input type="file" class="form-control text-white bg-black" name="file" id="filess">
-            </div>
-          </div>
-          <div class="row mt-3">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-              <div class="d-flex">
-                <button class="btn save_btn btn-outline-warning mt-2 my-4 mx-2 w-50" type="submit">Save</button>
-                <input class="btn save_btn btn-outline-warning mt-2 my-4 mx-2 w-50" data-dismiss="modal" type="reset"
-                  value="Reset">
-              </div>
-            </div>
-            <div class="col-md-4"></div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer"></div>
-    </div>
-  </div>
-</div>
-
-<!-- Add Comment  -->
-<div class="modal fade" id="commentsModal">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background-color: #3b3b3b;">
-      <div class="modal-header">
-        <h3 class="modal-title text-light" id="exampleModalLabel">Add Comments</h3>
-        <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" style="font-size: x-large;">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3" style="background-color: #000;">
-        <form action="{% url 'addRecurringInvoiceComment' invoice.id %}" method="post" class="needs-validation"
-          novalidate enctype="multipart/form-data">
-          {%csrf_token%}
-          <div class="row mt-2">
-            <div class="col-12">
-              <textarea type="text" rows="4" class="form-control text-white" name="comment" placeholder="Add Comments.."
-                required></textarea>
-              {% if not comments %}
-              <span class="my-2 font-weight-bold d-flex justify-content-center">No Comments.!</span>
-              {% else %}
-              <div class="container-fluid comments-table-container">
-                <table class="table table-borderless mt-4">
-                  <thead>
-                    <tr>
-                      <th class="text-center">sl no.</th>
-                      <th class="text-center">Comment</th>
-                      <th class="text-center">Delete</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for c in comments %}
-                    <tr class="">
-                      <td class="text-center">{{forloop.counter }}</td>
-                      <td class="text-center">{{c.comments}}</td>
-                      <td class="text-center"><a class="text-danger"
-                          href="{% url 'deleteRecurringInvoiceComment' c.id %}"
-                          onclick="return confirm('Are you sure you want to delete.?')"><i class="fa fa-trash"
-                            style="font-size: 1.1rem;"></i></a></td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              {% endif %}
-            </div>
-          </div>
-          <div class="row mt-3">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-              <div class="d-flex">
-                <button class="btn save_btn btn-outline-warning mt-2 my-4 mx-2 w-50" type="submit">Save</button>
-                <input class="btn save_btn btn-outline-warning mt-2 my-4 mx-2 w-50" data-dismiss="modal" type="reset"
-                  value="Close">
-              </div>
-            </div>
-            <div class="col-md-4"></div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer"></div>
-    </div>
-  </div>
-</div>
 
 <!-- History Modal  -->
 
